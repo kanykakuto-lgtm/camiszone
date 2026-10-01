@@ -5,6 +5,13 @@
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const P = CONFIG.precios;
 
+  // Completa los datos que se pueden deducir de las competiciones
+  TEAMS.forEach((t) => {
+    t.kit = t.kit || "1ª equipación";
+    t.cat = t.comps.map((c) => COMPS[c]).join(" · ");
+    t.patch = t.patch || t.comps.map((c) => PARCHES[c]).filter(Boolean).join(" / ");
+  });
+
   // ---------------------------------------------------------
   //  Dibujo de camisetas en SVG
   // ---------------------------------------------------------
@@ -34,6 +41,20 @@
         if (i % 2) out += `<rect x="${x}" y="0" width="${w}" height="220" fill="${c2}"/>`;
       }
       return out;
+    }
+    if (t.pattern === "hoops") {
+      let out = `<rect width="200" height="220" fill="${c1}"/>`;
+      for (let y = 30; y < 222; y += 32) out += `<rect x="0" y="${y}" width="200" height="16" fill="${c2}"/>`;
+      return out;
+    }
+    if (t.pattern === "halves") {
+      return `<rect width="200" height="220" fill="${c1}"/><rect x="100" y="0" width="100" height="220" fill="${c2}"/>`;
+    }
+    if (t.pattern === "sash") {
+      return `<rect width="200" height="220" fill="${c1}"/><path d="M40 0 L80 0 L180 180 L180 230 L150 230 Z" fill="${c2}"/>`;
+    }
+    if (t.pattern === "hband") {
+      return `<rect width="200" height="220" fill="${c1}"/><rect x="0" y="78" width="200" height="34" fill="${c2}"/>`;
     }
     if (t.pattern === "band") {
       return `<rect width="200" height="220" fill="${c1}"/>
@@ -98,29 +119,33 @@
     </svg>`;
   }
 
+  // Si existe img/<id>.jpg se muestra la foto; si no, el dibujo con los colores del equipo
+  const noPhoto = new Set();
   function shirtVisual(t, opts) {
-    if (t.foto && (!opts || opts.side !== "back")) {
-      return `<img src="${esc(t.foto)}" alt="Camiseta ${esc(t.name)} ${esc(t.kit)}" loading="lazy">`;
-    }
-    return shirtSVG(t, opts);
+    const svg = shirtSVG(t, opts);
+    if (noPhoto.has(t.id) || (opts && opts.side === "back")) return svg;
+    return `<span class="shirt-visual">${svg}<img src="img/${esc(t.id)}.jpg" alt="Camiseta ${esc(t.name)} ${esc(t.kit)}" loading="lazy"
+      onload="this.parentNode.classList.add('has-photo')" onerror="window.__noPhoto('${esc(t.id)}');this.remove()"></span>`;
   }
+  window.__noPhoto = (id) => noPhoto.add(id);
 
   // ---------------------------------------------------------
   //  Catálogo
   // ---------------------------------------------------------
-  const CATS = ["Todos", "LaLiga", "Selecciones", "Europa"];
-  let currentCat = "Todos";
+  const CATS = [...Object.keys(COMPS), "todos"];
+  let currentCat = CATS[0];
+  const catLabel = (c) => (c === "todos" ? "Todos" : COMPS[c]);
 
   function renderTabs() {
     $("#tabs").innerHTML = CATS.map(
-      (c) => `<button class="${c === currentCat ? "active" : ""}" data-cat="${c}">${c}</button>`
+      (c) => `<button class="${c === currentCat ? "active" : ""}" data-cat="${c}">${catLabel(c)} <small>${c === "todos" ? TEAMS.length : TEAMS.filter((t) => t.comps.includes(c)).length}</small></button>`
     ).join("");
   }
 
   function renderGrid() {
     const q = $("#search").value.trim().toLowerCase();
     const list = TEAMS.filter(
-      (t) => (currentCat === "Todos" || t.cat === currentCat) &&
+      (t) => (q || currentCat === "todos" || t.comps.includes(currentCat)) &&
         (!q || `${t.name} ${t.kit}`.toLowerCase().includes(q))
     );
     $("#grid").innerHTML = list.length

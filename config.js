@@ -24,44 +24,132 @@ const CONFIG = {
 };
 
 // ============================================================
-//  CATÁLOGO
-//  pattern: "solid" | "stripes" | "band" | "sash"
-//  colors:  colores del cuerpo (para rayas, se alternan)
-//  sleeves: color de las mangas (opcional)
+//  COMPETICIONES (pestañas del catálogo, en este orden)
+// ============================================================
+const COMPS = {
+  laliga: "LaLiga",
+  segunda: "Segunda",
+  premier: "Premier",
+  champions: "Champions",
+  selecciones: "Selecciones",
+};
+
+// ============================================================
+//  CATÁLOGO 26/27
+//  comps:   competiciones en las que juega (un equipo puede estar en varias)
+//  pattern: "solid" | "stripes" | "hoops" | "halves" | "sash" | "hband" | "band"
+//  colors:  colores del cuerpo · sleeves: color de mangas (opcional)
 //  trim:    cuello y puños · text: color del nombre/dorsal
 //  stars:   estrellas sobre el escudo
-//  foto:    ruta a una foto real (ej. "img/real-madrid.jpg"); si está
-//           vacía se muestra la ilustración con los colores del equipo
+//
+//  FOTOS: sube una foto a la carpeta img/ con el nombre del id
+//  (ej. img/real-madrid.jpg) y se mostrará en lugar del dibujo.
 // ============================================================
 const TEAMS = [
-  // ---------- LaLiga ----------
-  { id: "real-madrid", name: "Real Madrid", cat: "LaLiga", kit: "1ª equipación", pattern: "solid", colors: ["#ffffff"], trim: "#d4af37", text: "#1b2a4a", patch: "LaLiga / Champions", foto: "" },
-  { id: "barcelona", name: "FC Barcelona", cat: "LaLiga", kit: "1ª equipación", pattern: "stripes", colors: ["#a50044", "#004d98"], trim: "#edbb00", text: "#edbb00", patch: "LaLiga / Champions", foto: "" },
-  { id: "atletico", name: "Atlético de Madrid", cat: "LaLiga", kit: "1ª equipación", pattern: "stripes", colors: ["#cb3524", "#ffffff"], trim: "#272e61", text: "#272e61", patch: "LaLiga / Champions", foto: "" },
-  { id: "athletic", name: "Athletic Club", cat: "LaLiga", kit: "1ª equipación", pattern: "stripes", colors: ["#ee2523", "#ffffff"], trim: "#111111", text: "#111111", patch: "LaLiga", foto: "" },
-  { id: "real-sociedad", name: "Real Sociedad", cat: "LaLiga", kit: "1ª equipación", pattern: "stripes", colors: ["#0067b1", "#ffffff"], trim: "#0067b1", text: "#0b2a5b", patch: "LaLiga", foto: "" },
-  { id: "betis", name: "Real Betis", cat: "LaLiga", kit: "1ª equipación", pattern: "stripes", colors: ["#00954c", "#ffffff"], trim: "#00954c", text: "#00562c", patch: "LaLiga", foto: "" },
-  { id: "sevilla", name: "Sevilla FC", cat: "LaLiga", kit: "1ª equipación", pattern: "solid", colors: ["#ffffff"], trim: "#d2001f", text: "#d2001f", patch: "LaLiga", foto: "" },
-  { id: "villarreal", name: "Villarreal CF", cat: "LaLiga", kit: "1ª equipación", pattern: "solid", colors: ["#ffe14d"], trim: "#005187", text: "#005187", patch: "LaLiga / Champions", foto: "" },
-  { id: "valencia", name: "Valencia CF", cat: "LaLiga", kit: "1ª equipación", pattern: "solid", colors: ["#ffffff"], trim: "#111111", text: "#111111", patch: "LaLiga", foto: "" },
+  // ---------- LaLiga EA Sports ----------
+  { id: "alaves", name: "Deportivo Alavés", comps: ["laliga"], pattern: "stripes", colors: ["#0057a8", "#ffffff"], trim: "#0b2a5b", text: "#0b2a5b" },
+  { id: "athletic", name: "Athletic Club", comps: ["laliga"], pattern: "stripes", colors: ["#ee2523", "#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "atletico", name: "Atlético de Madrid", comps: ["laliga", "champions"], pattern: "stripes", colors: ["#cb3524", "#ffffff"], trim: "#272e61", text: "#272e61" },
+  { id: "barcelona", name: "FC Barcelona", comps: ["laliga", "champions"], pattern: "stripes", colors: ["#a50044", "#004d98"], trim: "#edbb00", text: "#edbb00" },
+  { id: "betis", name: "Real Betis", comps: ["laliga", "champions"], pattern: "stripes", colors: ["#00954c", "#ffffff"], trim: "#00954c", text: "#00562c" },
+  { id: "celta", name: "RC Celta", comps: ["laliga"], pattern: "solid", colors: ["#8ac3ee"], trim: "#e5254b", text: "#ffffff" },
+  { id: "deportivo", name: "RC Deportivo", comps: ["laliga"], pattern: "stripes", colors: ["#0059a6", "#ffffff"], trim: "#0b2a5b", text: "#0b2a5b" },
+  { id: "elche", name: "Elche CF", comps: ["laliga"], pattern: "hband", colors: ["#ffffff", "#00843d"], trim: "#00843d", text: "#00843d" },
+  { id: "espanyol", name: "RCD Espanyol", comps: ["laliga"], pattern: "stripes", colors: ["#0074c8", "#ffffff"], trim: "#0074c8", text: "#0b2a5b" },
+  { id: "getafe", name: "Getafe CF", comps: ["laliga"], pattern: "solid", colors: ["#005999"], trim: "#ffffff", text: "#ffffff" },
+  { id: "levante", name: "Levante UD", comps: ["laliga"], pattern: "stripes", colors: ["#b4053f", "#00428c"], trim: "#ffffff", text: "#ffffff" },
+  { id: "malaga", name: "Málaga CF", comps: ["laliga"], pattern: "stripes", colors: ["#0b5fa5", "#ffffff"], trim: "#0b5fa5", text: "#0b2a5b" },
+  { id: "osasuna", name: "CA Osasuna", comps: ["laliga"], pattern: "solid", colors: ["#d91a21"], trim: "#0a346f", text: "#ffffff" },
+  { id: "racing", name: "Racing de Santander", comps: ["laliga"], pattern: "solid", colors: ["#ffffff"], trim: "#00733e", text: "#00733e" },
+  { id: "rayo", name: "Rayo Vallecano", comps: ["laliga"], pattern: "sash", colors: ["#ffffff", "#e53027"], trim: "#e53027", text: "#111111" },
+  { id: "real-madrid", name: "Real Madrid", comps: ["laliga", "champions"], pattern: "solid", colors: ["#ffffff"], trim: "#d4af37", text: "#1b2a4a" },
+  { id: "real-sociedad", name: "Real Sociedad", comps: ["laliga"], pattern: "stripes", colors: ["#0067b1", "#ffffff"], trim: "#0067b1", text: "#0b2a5b" },
+  { id: "sevilla", name: "Sevilla FC", comps: ["laliga"], pattern: "solid", colors: ["#ffffff"], trim: "#d2001f", text: "#d2001f" },
+  { id: "valencia", name: "Valencia CF", comps: ["laliga"], pattern: "solid", colors: ["#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "villarreal", name: "Villarreal CF", comps: ["laliga", "champions"], pattern: "solid", colors: ["#ffe14d"], trim: "#005187", text: "#005187" },
+
+  // ---------- LaLiga Hypermotion (Segunda) ----------
+  { id: "albacete", name: "Albacete BP", comps: ["segunda"], pattern: "solid", colors: ["#ffffff"], trim: "#c8102e", text: "#111111" },
+  { id: "almeria", name: "UD Almería", comps: ["segunda"], pattern: "stripes", colors: ["#ee2523", "#ffffff"], trim: "#ee2523", text: "#111111" },
+  { id: "andorra", name: "FC Andorra", comps: ["segunda"], pattern: "solid", colors: ["#0b2d6b"], trim: "#f4c300", text: "#f4c300" },
+  { id: "burgos", name: "Burgos CF", comps: ["segunda"], pattern: "solid", colors: ["#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "cadiz", name: "Cádiz CF", comps: ["segunda"], pattern: "solid", colors: ["#fde100"], trim: "#0045a5", text: "#0045a5" },
+  { id: "castellon", name: "CD Castellón", comps: ["segunda"], pattern: "stripes", colors: ["#111111", "#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "celta-fortuna", name: "Celta Fortuna", comps: ["segunda"], pattern: "solid", colors: ["#8ac3ee"], trim: "#e5254b", text: "#ffffff" },
+  { id: "ceuta", name: "AD Ceuta", comps: ["segunda"], pattern: "solid", colors: ["#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "cordoba", name: "Córdoba CF", comps: ["segunda"], pattern: "stripes", colors: ["#007a33", "#ffffff"], trim: "#007a33", text: "#004d20" },
+  { id: "eibar", name: "SD Eibar", comps: ["segunda"], pattern: "stripes", colors: ["#8a1538", "#00529f"], trim: "#ffffff", text: "#ffffff" },
+  { id: "eldense", name: "CD Eldense", comps: ["segunda"], pattern: "stripes", colors: ["#003da5", "#d50032"], trim: "#ffffff", text: "#ffffff" },
+  { id: "girona", name: "Girona FC", comps: ["segunda"], pattern: "stripes", colors: ["#d6001c", "#ffffff"], trim: "#d6001c", text: "#111111" },
+  { id: "granada", name: "Granada CF", comps: ["segunda"], pattern: "hoops", colors: ["#c8102e", "#ffffff"], trim: "#c8102e", text: "#0b2a5b" },
+  { id: "las-palmas", name: "UD Las Palmas", comps: ["segunda"], pattern: "solid", colors: ["#ffe500"], trim: "#0057b8", text: "#0057b8" },
+  { id: "leganes", name: "CD Leganés", comps: ["segunda"], pattern: "stripes", colors: ["#0a3d91", "#ffffff"], trim: "#0a3d91", text: "#0a3d91" },
+  { id: "mallorca", name: "RCD Mallorca", comps: ["segunda"], pattern: "solid", colors: ["#e20613"], trim: "#111111", text: "#ffffff" },
+  { id: "oviedo", name: "Real Oviedo", comps: ["segunda"], pattern: "solid", colors: ["#0050a0"], trim: "#ffffff", text: "#ffffff" },
+  { id: "real-sociedad-b", name: "Real Sociedad B", comps: ["segunda"], pattern: "stripes", colors: ["#0067b1", "#ffffff"], trim: "#0067b1", text: "#0b2a5b" },
+  { id: "sabadell", name: "CE Sabadell", comps: ["segunda"], pattern: "halves", colors: ["#ffffff", "#1e5ba8"], trim: "#1e5ba8", text: "#111111" },
+  { id: "sporting-gijon", name: "Real Sporting", comps: ["segunda"], pattern: "stripes", colors: ["#e30613", "#ffffff"], trim: "#0b2a5b", text: "#0b2a5b" },
+  { id: "tenerife", name: "CD Tenerife", comps: ["segunda"], pattern: "solid", colors: ["#ffffff"], trim: "#003da5", text: "#003da5" },
+  { id: "valladolid", name: "Real Valladolid", comps: ["segunda"], pattern: "stripes", colors: ["#5c2d91", "#ffffff"], trim: "#5c2d91", text: "#3b1a63" },
+
+  // ---------- Premier League ----------
+  { id: "arsenal", name: "Arsenal", comps: ["premier", "champions"], pattern: "solid", colors: ["#ef0107"], sleeves: "#ffffff", trim: "#063672", text: "#ffffff" },
+  { id: "aston-villa", name: "Aston Villa", comps: ["premier", "champions"], pattern: "solid", colors: ["#670e36"], sleeves: "#95bfe5", trim: "#95bfe5", text: "#ffd200" },
+  { id: "bournemouth", name: "AFC Bournemouth", comps: ["premier"], pattern: "stripes", colors: ["#da291c", "#111111"], trim: "#111111", text: "#ffffff" },
+  { id: "brentford", name: "Brentford", comps: ["premier"], pattern: "stripes", colors: ["#e30613", "#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "brighton", name: "Brighton & Hove Albion", comps: ["premier"], pattern: "stripes", colors: ["#0057b8", "#ffffff"], trim: "#0057b8", text: "#0b2a5b" },
+  { id: "chelsea", name: "Chelsea", comps: ["premier"], pattern: "solid", colors: ["#034694"], trim: "#ffffff", text: "#ffffff" },
+  { id: "coventry", name: "Coventry City", comps: ["premier"], pattern: "solid", colors: ["#6cace4"], trim: "#ffffff", text: "#ffffff" },
+  { id: "crystal-palace", name: "Crystal Palace", comps: ["premier"], pattern: "stripes", colors: ["#c4122e", "#1b458f"], trim: "#1b458f", text: "#ffffff" },
+  { id: "everton", name: "Everton", comps: ["premier"], pattern: "solid", colors: ["#003399"], trim: "#ffffff", text: "#ffffff" },
+  { id: "fulham", name: "Fulham", comps: ["premier"], pattern: "solid", colors: ["#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "hull", name: "Hull City", comps: ["premier"], pattern: "solid", colors: ["#f5a12d"], trim: "#111111", text: "#111111" },
+  { id: "ipswich", name: "Ipswich Town", comps: ["premier"], pattern: "solid", colors: ["#0044a9"], trim: "#ffffff", text: "#ffffff" },
+  { id: "leeds", name: "Leeds United", comps: ["premier"], pattern: "solid", colors: ["#ffffff"], trim: "#1d428a", text: "#1d428a" },
+  { id: "liverpool", name: "Liverpool", comps: ["premier", "champions"], pattern: "solid", colors: ["#c8102e"], trim: "#ffffff", text: "#ffffff" },
+  { id: "man-city", name: "Manchester City", comps: ["premier", "champions"], pattern: "solid", colors: ["#6cabdd"], trim: "#1c2c5b", text: "#ffffff" },
+  { id: "man-utd", name: "Manchester United", comps: ["premier", "champions"], pattern: "solid", colors: ["#da291c"], trim: "#111111", text: "#ffffff" },
+  { id: "newcastle", name: "Newcastle United", comps: ["premier"], pattern: "stripes", colors: ["#111111", "#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "nottingham", name: "Nottingham Forest", comps: ["premier"], pattern: "solid", colors: ["#dd0000"], trim: "#ffffff", text: "#ffffff" },
+  { id: "sunderland", name: "Sunderland", comps: ["premier"], pattern: "stripes", colors: ["#eb172b", "#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "tottenham", name: "Tottenham Hotspur", comps: ["premier"], pattern: "solid", colors: ["#ffffff"], trim: "#132257", text: "#132257" },
+
+  // ---------- Champions League (resto de Europa) ----------
+  { id: "psg", name: "Paris Saint-Germain", comps: ["champions"], pattern: "band", colors: ["#004170", "#da291c", "#ffffff"], trim: "#da291c", text: "#ffffff" },
+  { id: "bayern", name: "Bayern Múnich", comps: ["champions"], pattern: "solid", colors: ["#dc052d"], trim: "#ffffff", text: "#ffffff" },
+  { id: "dortmund", name: "Borussia Dortmund", comps: ["champions"], pattern: "solid", colors: ["#fde100"], trim: "#111111", text: "#111111" },
+  { id: "leipzig", name: "RB Leipzig", comps: ["champions"], pattern: "solid", colors: ["#ffffff"], trim: "#dd0741", text: "#0c2043" },
+  { id: "stuttgart", name: "VfB Stuttgart", comps: ["champions"], pattern: "hband", colors: ["#ffffff", "#e32219"], trim: "#e32219", text: "#e32219" },
+  { id: "inter", name: "Inter de Milán", comps: ["champions"], pattern: "stripes", colors: ["#0068a8", "#111111"], trim: "#d4af37", text: "#ffffff" },
+  { id: "napoli", name: "SSC Napoli", comps: ["champions"], pattern: "solid", colors: ["#12a0d7"], trim: "#ffffff", text: "#ffffff" },
+  { id: "roma", name: "AS Roma", comps: ["champions"], pattern: "solid", colors: ["#8e1f2f"], trim: "#f0bc42", text: "#f0bc42" },
+  { id: "como", name: "Como 1907", comps: ["champions"], pattern: "solid", colors: ["#0d3b8c"], trim: "#ffffff", text: "#ffffff" },
+  { id: "lens", name: "RC Lens", comps: ["champions"], pattern: "solid", colors: ["#ffd400"], sleeves: "#e00010", trim: "#e00010", text: "#e00010" },
+  { id: "lille", name: "LOSC Lille", comps: ["champions"], pattern: "solid", colors: ["#e01e13"], trim: "#20325f", text: "#ffffff" },
+  { id: "psv", name: "PSV Eindhoven", comps: ["champions"], pattern: "stripes", colors: ["#ed1c24", "#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "feyenoord", name: "Feyenoord", comps: ["champions"], pattern: "halves", colors: ["#e2001a", "#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "porto", name: "FC Porto", comps: ["champions"], pattern: "stripes", colors: ["#00428c", "#ffffff"], trim: "#00428c", text: "#00428c" },
+  { id: "sporting-cp", name: "Sporting CP", comps: ["champions"], pattern: "hoops", colors: ["#008057", "#ffffff"], trim: "#008057", text: "#111111" },
+  { id: "galatasaray", name: "Galatasaray", comps: ["champions"], pattern: "halves", colors: ["#fdb912", "#a90432"], trim: "#a90432", text: "#ffffff" },
+  { id: "fenerbahce", name: "Fenerbahçe", comps: ["champions"], pattern: "stripes", colors: ["#002d72", "#ffed00"], trim: "#002d72", text: "#ffffff" },
+  { id: "club-brugge", name: "Club Brugge", comps: ["champions"], pattern: "stripes", colors: ["#0062b0", "#111111"], trim: "#111111", text: "#ffffff" },
+  { id: "bodo-glimt", name: "Bodø/Glimt", comps: ["champions"], pattern: "solid", colors: ["#ffd200"], trim: "#111111", text: "#111111" },
+  { id: "viking", name: "Viking FK", comps: ["champions"], pattern: "solid", colors: ["#00205b"], trim: "#ffffff", text: "#ffffff" },
+  { id: "slavia", name: "Slavia Praga", comps: ["champions"], pattern: "halves", colors: ["#ffffff", "#e30613"], trim: "#e30613", text: "#111111" },
+  { id: "aek", name: "AEK Atenas", comps: ["champions"], pattern: "solid", colors: ["#ffd700"], trim: "#111111", text: "#111111" },
+  { id: "lask", name: "LASK", comps: ["champions"], pattern: "stripes", colors: ["#111111", "#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "slovan", name: "Slovan Bratislava", comps: ["champions"], pattern: "solid", colors: ["#5bb4e5"], trim: "#ffffff", text: "#ffffff" },
+  { id: "shakhtar", name: "Shakhtar Donetsk", comps: ["champions"], pattern: "stripes", colors: ["#f26a21", "#111111"], trim: "#111111", text: "#ffffff" },
+  { id: "sabah", name: "Sabah FK", comps: ["champions"], pattern: "solid", colors: ["#ffffff"], trim: "#e05a1b", text: "#e05a1b" },
 
   // ---------- Selecciones ----------
-  { id: "espana-roja", name: "España", cat: "Selecciones", kit: "1ª equipación · Roja", pattern: "solid", colors: ["#c60b1e"], trim: "#ffc400", text: "#ffc400", stars: 2, starColor: "#ffc400", patch: "Campeones del Mundo", foto: "" },
-  { id: "espana-blanca", name: "España", cat: "Selecciones", kit: "2ª equipación · Blanca", pattern: "solid", colors: ["#ffffff"], trim: "#c60b1e", text: "#c60b1e", stars: 2, starColor: "#d4a017", patch: "Campeones del Mundo", foto: "" },
-  { id: "argentina", name: "Argentina", cat: "Selecciones", kit: "1ª equipación", pattern: "stripes", colors: ["#75aadb", "#ffffff"], trim: "#111111", text: "#111111", stars: 3, starColor: "#d4a017", patch: "Campeones del Mundo", foto: "" },
-  { id: "brasil", name: "Brasil", cat: "Selecciones", kit: "1ª equipación", pattern: "solid", colors: ["#ffdf00"], trim: "#009c3b", text: "#009c3b", stars: 5, starColor: "#009c3b", patch: "Campeones del Mundo", foto: "" },
-  { id: "francia", name: "Francia", cat: "Selecciones", kit: "1ª equipación", pattern: "solid", colors: ["#1d2a5b"], trim: "#ffffff", text: "#ffffff", stars: 2, starColor: "#d4a017", patch: "Campeones del Mundo", foto: "" },
-  { id: "portugal", name: "Portugal", cat: "Selecciones", kit: "1ª equipación", pattern: "solid", colors: ["#c8102e"], trim: "#046a38", text: "#ffd100", patch: "Nations League", foto: "" },
-
-  // ---------- Europa ----------
-  { id: "man-city", name: "Manchester City", cat: "Europa", kit: "1ª equipación", pattern: "solid", colors: ["#6cabdd"], trim: "#1c2c5b", text: "#ffffff", patch: "Premier / Champions", foto: "" },
-  { id: "liverpool", name: "Liverpool", cat: "Europa", kit: "1ª equipación", pattern: "solid", colors: ["#c8102e"], trim: "#ffffff", text: "#ffffff", patch: "Premier / Champions", foto: "" },
-  { id: "arsenal", name: "Arsenal", cat: "Europa", kit: "1ª equipación", pattern: "solid", colors: ["#ef0107"], sleeves: "#ffffff", trim: "#063672", text: "#ffffff", patch: "Premier / Champions", foto: "" },
-  { id: "man-utd", name: "Manchester United", cat: "Europa", kit: "1ª equipación", pattern: "solid", colors: ["#da291c"], trim: "#111111", text: "#ffffff", patch: "Premier", foto: "" },
-  { id: "chelsea", name: "Chelsea", cat: "Europa", kit: "1ª equipación", pattern: "solid", colors: ["#034694"], trim: "#ffffff", text: "#ffffff", patch: "Premier / Champions", foto: "" },
-  { id: "psg", name: "Paris Saint-Germain", cat: "Europa", kit: "1ª equipación", pattern: "band", colors: ["#004170", "#da291c", "#ffffff"], trim: "#da291c", text: "#ffffff", patch: "Ligue 1 / Champions", foto: "" },
-  { id: "bayern", name: "Bayern Múnich", cat: "Europa", kit: "1ª equipación", pattern: "solid", colors: ["#dc052d"], trim: "#ffffff", text: "#ffffff", patch: "Bundesliga / Champions", foto: "" },
-  { id: "juventus", name: "Juventus", cat: "Europa", kit: "1ª equipación", pattern: "stripes", colors: ["#111111", "#ffffff"], trim: "#111111", text: "#111111", patch: "Serie A / Champions", foto: "" },
-  { id: "inter", name: "Inter de Milán", cat: "Europa", kit: "1ª equipación", pattern: "stripes", colors: ["#0068a8", "#111111"], trim: "#d4af37", text: "#ffffff", patch: "Serie A / Champions", foto: "" },
-  { id: "milan", name: "AC Milan", cat: "Europa", kit: "1ª equipación", pattern: "stripes", colors: ["#e30613", "#111111"], trim: "#111111", text: "#ffffff", patch: "Serie A / Champions", foto: "" },
+  { id: "espana-roja", name: "España", comps: ["selecciones"], kit: "1ª equipación · Roja", pattern: "solid", colors: ["#c60b1e"], trim: "#ffc400", text: "#ffc400", stars: 2, starColor: "#ffc400", patch: "Campeones del Mundo" },
+  { id: "espana-blanca", name: "España", comps: ["selecciones"], kit: "2ª equipación · Blanca", pattern: "solid", colors: ["#ffffff"], trim: "#c60b1e", text: "#c60b1e", stars: 2, starColor: "#d4a017", patch: "Campeones del Mundo" },
+  { id: "argentina", name: "Argentina", comps: ["selecciones"], pattern: "stripes", colors: ["#75aadb", "#ffffff"], trim: "#111111", text: "#111111", stars: 3, starColor: "#d4a017", patch: "Campeones del Mundo" },
+  { id: "brasil", name: "Brasil", comps: ["selecciones"], pattern: "solid", colors: ["#ffdf00"], trim: "#009c3b", text: "#009c3b", stars: 5, starColor: "#009c3b", patch: "Campeones del Mundo" },
+  { id: "francia", name: "Francia", comps: ["selecciones"], pattern: "solid", colors: ["#1d2a5b"], trim: "#ffffff", text: "#ffffff", stars: 2, starColor: "#d4a017", patch: "Campeones del Mundo" },
+  { id: "portugal", name: "Portugal", comps: ["selecciones"], pattern: "solid", colors: ["#c8102e"], trim: "#046a38", text: "#ffd100", patch: "Nations League" },
 ];
+
+// Nombre del parche de cada competición
+const PARCHES = { laliga: "LaLiga", segunda: "LaLiga Hypermotion", premier: "Premier League", champions: "Champions League" };

@@ -46,11 +46,16 @@ Todo se edita en `config.js`:
 - `cortes`: tallas disponibles — hombre S a 4XL, mujer XS a 4XL, niño y niña de 1-2 a 13-14 años.
 - `TEAMS`: lista de equipos. Puedes añadir, quitar o cambiar colores.
 
-### Poner fotos reales
+### Poner fotos de las camisetas
 
-Las camisetas se muestran como ilustraciones con los colores de cada equipo.
-Para usar una foto real, guárdala en `img/` y pon su ruta en el campo `foto` del equipo:
+Si no hay foto, cada camiseta se muestra como un dibujo con los colores del equipo.
+Para poner una foto, súbela a la carpeta `img/` con el **nombre exacto del id del equipo** y en `.jpg`
+(los ids están en `config.js`), por ejemplo:
 
-```js
-{ id: "real-madrid", ..., foto: "img/real-madrid.jpg" }
-```
+- `img/real-madrid.jpg`, `img/barcelona.jpg`, `img/espana-roja.jpg`, `img/espana-blanca.jpg`…
+
+La web la detecta sola; no hay que tocar nada más. Desde el móvil: en el navegador abre
+`github.com/kanykakuto-lgtm/camiszone/tree/main/img` → **Add file → Upload files**.
+
+Usa fotos tuyas (de las camisetas que vendes) o con permiso: las fotos oficiales de los
+clubes y marcas tienen derechos de autor.
