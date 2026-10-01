@@ -9,7 +9,7 @@
   TEAMS.forEach((t) => {
     t.kit = t.kit || "1ª equipación";
     t.cat = t.comps.map((c) => COMPS[c]).join(" · ");
-    t.patch = t.patch || t.comps.map((c) => PARCHES[c]).filter(Boolean).join(" / ");
+    t.parches = t.parches || [...new Set(t.comps.map((c) => PARCHE_DE_COMPETICION[c]).filter(Boolean))];
   });
 
   // ---------------------------------------------------------
@@ -129,6 +129,28 @@
     </svg>`;
   }
 
+  // Dibujo de un parche (o la foto img/parches/<id>.jpg si existe)
+  function patchSVG(id) {
+    const p = PARCHES[id];
+    const shape = p.forma === "circulo"
+      ? `<circle cx="50" cy="50" r="44" fill="${p.fondo}" stroke="${p.borde}" stroke-width="6"/>`
+      : `<path d="M10 8 H90 V52 Q90 82 50 94 Q10 82 10 52 Z" fill="${p.fondo}" stroke="${p.borde}" stroke-width="6" stroke-linejoin="round"/>`;
+    const fs1 = p.linea1.length > 8 ? 11 : 14;
+    const fs2 = p.linea2.length > 8 ? 9 : 12;
+    return `<svg viewBox="0 0 100 100" class="patch-svg" role="img" aria-label="Parche ${esc(p.nombre)}">
+      ${shape}
+      <g fill="${p.texto}" font-family="Oswald, Impact, sans-serif" font-weight="700" text-anchor="middle">
+        <text x="50" y="${p.linea2 ? 48 : 56}" font-size="${fs1}">${esc(p.linea1)}</text>
+        ${p.linea2 ? `<text x="50" y="64" font-size="${fs2}">${esc(p.linea2)}</text>` : ""}
+      </g>
+      <path d="M38 24 l3 6 6 1 -4.5 4 1 6 -5.5 -3 -5.5 3 1 -6 -4.5 -4 6 -1 Z" fill="${p.borde}" transform="translate(12 -4)"/>
+    </svg>`;
+  }
+  function patchVisual(id) {
+    return `<span class="shirt-visual">${patchSVG(id)}<img src="img/parches/${esc(id)}.jpg" alt="Parche ${esc(PARCHES[id].nombre)}"
+      onload="this.parentNode.classList.add('has-photo')" onerror="this.remove()"></span>`;
+  }
+
   // Si existe img/<id>.jpg se muestra la foto; si no, el dibujo con los colores del equipo
   const noPhoto = new Set();
   function shirtVisual(t, opts) {
@@ -200,7 +222,7 @@
     let p = o.version === "jugador" ? P.jugador : P.fan;
     if (isKid(o.fit)) p -= P.ninoDescuento;
     if (o.player || o.number !== "") p += P.personalizacion;
-    if (o.patch) p += P.parche;
+    p += (o.patches || []).length * P.parche;
     return p;
   }
 
@@ -212,7 +234,7 @@
 
   function openProduct(id) {
     const t = TEAMS.find((x) => x.id === id);
-    sel = { team: t, version: "fan", fit: "Hombre", size: "M", player: "", number: "", patch: false, qty: 1, side: "front" };
+    sel = { team: t, version: "fan", fit: "Hombre", size: "M", player: "", number: "", patches: [], qty: 1, side: "front" };
     $("#mCat").textContent = `${t.cat} · Temporada 26/27`;
     $("#mName").textContent = t.name;
     $("#mKit").textContent = t.kit;
@@ -223,10 +245,14 @@
     chips($("#mFit"), Object.keys(CONFIG.cortes).map((c) => ({ value: c, label: c })), sel.fit, "fit");
     renderSizes();
     $("#mPersPrice").textContent = P.personalizacion ? `(+${eur(P.personalizacion)})` : "(incluida)";
-    $("#mPatchLabel").textContent = `Parche ${t.patch || "de competición"} ${P.parche ? `(+${eur(P.parche)})` : "(incluido)"}`;
+    $("#mPatchPrice").textContent = P.parche ? `(+${eur(P.parche)} cada uno)` : "(incluidos)";
+    $("#mPatches").innerHTML = t.parches.map((id) => `
+      <label class="patch-opt">
+        <input type="checkbox" name="patch" value="${id}">
+        <span class="patch-card">${patchVisual(id)}<small>${esc(PARCHES[id].nombre)}</small></span>
+      </label>`).join("");
     $("#mPlayer").value = "";
     $("#mNumber").value = "";
-    $("#mPatch").checked = false;
     setSide("front");
     updateModal();
     modal.showModal();
@@ -253,7 +279,7 @@
     if (e.target.name === "version") sel.version = e.target.value;
     if (e.target.name === "fit") { sel.fit = e.target.value; renderSizes(); }
     if (e.target.name === "size") sel.size = e.target.value;
-    if (e.target.id === "mPatch") sel.patch = e.target.checked;
+    if (e.target.name === "patch") sel.patches = $$('#mPatches input:checked').map((i) => i.value);
     updateModal();
   });
   $("#mPlayer").addEventListener("input", (e) => {
@@ -282,7 +308,7 @@
     if (e.submitter && e.submitter.value === "add") {
       cart.push({
         id: sel.team.id, version: sel.version, fit: sel.fit, size: sel.size,
-        player: sel.player, number: sel.number, patch: sel.patch, qty: sel.qty,
+        player: sel.player, number: sel.number, patches: sel.patches, qty: sel.qty,
       });
       saveCart();
       renderCart();
@@ -296,7 +322,7 @@
   // ---------------------------------------------------------
   const isKidSize = (size) => /años/.test(size);
   let cart = [];
-  try { cart = JSON.parse(localStorage.getItem("camiszone-cart") || "[]").filter((i) => TEAMS.some((t) => t.id === i.id)).map((i) => ({ fit: isKidSize(i.size) ? "Niño" : "Hombre", ...i })); } catch { cart = []; }
+  try { cart = JSON.parse(localStorage.getItem("camiszone-cart") || "[]").filter((i) => TEAMS.some((t) => t.id === i.id)).map((i) => ({ fit: isKidSize(i.size) ? "Niño" : "Hombre", ...i, patches: (i.patches || []).filter((id) => PARCHES[id]) })); } catch { cart = []; }
   function saveCart() { try { localStorage.setItem("camiszone-cart", JSON.stringify(cart)); } catch {} }
 
   const teamOf = (i) => TEAMS.find((t) => t.id === i.id);
@@ -306,7 +332,7 @@
   function describe(i) {
     const parts = [i.version === "jugador" ? "Versión jugador" : "Versión aficionado", i.fit, `Talla ${i.size}`];
     if (i.player || i.number !== "") parts.push(`${i.player || "—"} ${i.number !== "" ? "#" + i.number : ""}`.trim());
-    if (i.patch) parts.push("Con parche");
+    if (i.patches.length) parts.push(`Parches: ${i.patches.map((id) => PARCHES[id].nombre).join(", ")}`);
     return parts;
   }
 
@@ -376,7 +402,7 @@
           talla: i.size,
           nombre: i.player,
           dorsal: i.number,
-          parche: i.patch ? `Sí (${t.patch || "competición"})` : "No",
+          parche: i.patches.length ? i.patches.map((id) => PARCHES[id].nombre).join(", ") : "No",
           cantidad: i.qty,
           precioUnidad: unitPrice(i),
           subtotal: lineTotal(i),

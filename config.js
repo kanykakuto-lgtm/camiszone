@@ -180,8 +180,8 @@ const TEAMS = [
   { id: "sabah", name: "Sabah FK", comps: ["champions"], pattern: "solid", colors: ["#ffffff"], trim: "#e05a1b", text: "#e05a1b" },
 
   // ---------- Selecciones (las 48 del Mundial 2026) ----------
-  { id: "espana-roja", name: "España", comps: ["selecciones"], kit: "1ª equipación · Roja", pattern: "solid", colors: ["#c60b1e"], trim: "#ffc400", text: "#ffc400", stars: 2, starColor: "#ffc400", patch: "Campeones del Mundo" },
-  { id: "espana-blanca", name: "España", comps: ["selecciones"], kit: "2ª equipación · Blanca", pattern: "solid", colors: ["#ffffff"], trim: "#c60b1e", text: "#c60b1e", stars: 2, starColor: "#d4a017", patch: "Campeones del Mundo" },
+  { id: "espana-roja", name: "España", comps: ["selecciones"], kit: "1ª equipación · Roja", pattern: "solid", colors: ["#c60b1e"], trim: "#ffc400", text: "#ffc400", stars: 2, starColor: "#ffc400", parches: ["campeones", "mundial"] },
+  { id: "espana-blanca", name: "España", comps: ["selecciones"], kit: "2ª equipación · Blanca", pattern: "solid", colors: ["#ffffff"], trim: "#c60b1e", text: "#c60b1e", stars: 2, starColor: "#d4a017", parches: ["campeones", "mundial"] },
   { id: "alemania", name: "Alemania", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#111111", text: "#111111", stars: 4, starColor: "#d4a017" },
   { id: "arabia-saudi", name: "Arabia Saudí", comps: ["selecciones"], pattern: "solid", colors: ["#006c35"], trim: "#ffffff", text: "#ffffff" },
   { id: "argelia", name: "Argelia", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#006233", text: "#006233" },
@@ -218,7 +218,7 @@ const TEAMS = [
   { id: "paises-bajos", name: "Países Bajos", comps: ["selecciones"], pattern: "solid", colors: ["#f36c21"], trim: "#1b2f6b", text: "#1b2f6b" },
   { id: "panama", name: "Panamá", comps: ["selecciones"], pattern: "solid", colors: ["#da121a"], trim: "#072357", text: "#ffffff" },
   { id: "paraguay", name: "Paraguay", comps: ["selecciones"], pattern: "stripes", colors: ["#d52b1e", "#ffffff"], trim: "#0038a8", text: "#0038a8" },
-  { id: "portugal", name: "Portugal", comps: ["selecciones"], pattern: "solid", colors: ["#c8102e"], trim: "#046a38", text: "#ffd100", patch: "Nations League" },
+  { id: "portugal", name: "Portugal", comps: ["selecciones"], pattern: "solid", colors: ["#c8102e"], trim: "#046a38", text: "#ffd100", parches: ["mundial", "nations"] },
   { id: "qatar", name: "Qatar", comps: ["selecciones"], pattern: "solid", colors: ["#8a1538"], trim: "#ffffff", text: "#ffffff" },
   { id: "rd-congo", name: "RD Congo", comps: ["selecciones"], pattern: "solid", colors: ["#007fff"], trim: "#ce1021", text: "#f7d618" },
   { id: "senegal", name: "Senegal", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#00853f", text: "#00853f" },
@@ -231,5 +231,25 @@ const TEAMS = [
   { id: "uzbekistan", name: "Uzbekistán", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#0099b5", text: "#0099b5" },
 ];
 
-// Nombre del parche de cada competición
-const PARCHES = { laliga: "LaLiga", segunda: "LaLiga Hypermotion", premier: "Premier League", seriea: "Serie A", ligue1: "Ligue 1", champions: "Champions League", selecciones: "Mundial 2026" };
+// ============================================================
+//  PARCHES
+//  Cada equipo puede llevar los parches de sus competiciones.
+//  Un equipo puede tener otros con  parches: ["campeones", "mundial"]
+//
+//  FOTOS: sube una foto a img/parches/ con el nombre del id
+//  (ej. img/parches/champions.jpg) y se mostrará en lugar del dibujo.
+// ============================================================
+const PARCHES = {
+  laliga:     { nombre: "LaLiga",              linea1: "LALIGA",      linea2: "EA SPORTS",  forma: "escudo",  fondo: "#ffffff", borde: "#ff4b44", texto: "#111111" },
+  segunda:    { nombre: "LaLiga Hypermotion",  linea1: "LALIGA",      linea2: "HYPERMOTION", forma: "escudo", fondo: "#ffffff", borde: "#1b1b1b", texto: "#111111" },
+  premier:    { nombre: "Premier League",      linea1: "PREMIER",     linea2: "LEAGUE",     forma: "escudo",  fondo: "#37003c", borde: "#00ff85", texto: "#ffffff" },
+  seriea:     { nombre: "Serie A",             linea1: "SERIE A",     linea2: "",           forma: "escudo",  fondo: "#ffffff", borde: "#0b2f6b", texto: "#0b2f6b" },
+  ligue1:     { nombre: "Ligue 1",             linea1: "LIGUE 1",     linea2: "",           forma: "escudo",  fondo: "#091c3e", borde: "#dae025", texto: "#ffffff" },
+  champions:  { nombre: "Champions League",    linea1: "CHAMPIONS",   linea2: "LEAGUE",     forma: "circulo", fondo: "#0b1e5b", borde: "#c0c8d8", texto: "#ffffff" },
+  mundial:    { nombre: "Mundial 2026",        linea1: "MUNDIAL",     linea2: "2026",       forma: "circulo", fondo: "#ffffff", borde: "#d4a017", texto: "#111111" },
+  campeones:  { nombre: "Campeones del Mundo", linea1: "CAMPEONES",   linea2: "DEL MUNDO",  forma: "escudo",  fondo: "#d4a017", borde: "#8a6a10", texto: "#ffffff" },
+  nations:    { nombre: "Nations League",      linea1: "NATIONS",     linea2: "LEAGUE",     forma: "circulo", fondo: "#111111", borde: "#c0c8d8", texto: "#ffffff" },
+};
+
+// Parche que corresponde a cada competición
+const PARCHE_DE_COMPETICION = { laliga: "laliga", segunda: "segunda", premier: "premier", seriea: "seriea", ligue1: "ligue1", champions: "champions", selecciones: "mundial" };

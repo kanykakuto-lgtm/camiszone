@@ -69,5 +69,19 @@ Para poner una foto, súbela a la carpeta `img/` con el **nombre exacto del id d
 La web la detecta sola; no hay que tocar nada más. Desde el móvil: en el navegador abre
 `github.com/kanykakuto-lgtm/camiszone/tree/main/img` → **Add file → Upload files**.
 
+**Parches:** igual, en la carpeta `img/parches/`:
+
+| Archivo | Parche |
+|---|---|
+| `img/parches/laliga.jpg` | LaLiga |
+| `img/parches/segunda.jpg` | LaLiga Hypermotion |
+| `img/parches/premier.jpg` | Premier League |
+| `img/parches/seriea.jpg` | Serie A |
+| `img/parches/ligue1.jpg` | Ligue 1 |
+| `img/parches/champions.jpg` | Champions League |
+| `img/parches/mundial.jpg` | Mundial 2026 |
+| `img/parches/campeones.jpg` | Campeones del Mundo |
+| `img/parches/nations.jpg` | Nations League |
+
 Usa fotos tuyas (de las camisetas que vendes) o con permiso: las fotos oficiales de los
 clubes y marcas tienen derechos de autor.
