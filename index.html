@@ -39,6 +39,14 @@
     <div class="grid" id="grid"></div>
   </main>
 
+  <section class="ask-banner">
+    <div>
+      <h2>¿No encuentras tu camiseta?</h2>
+      <p>Otra equipación, otro equipo, una retro… Pregúntanos y te decimos si la tenemos.</p>
+    </div>
+    <button class="btn btn-primary" data-ask>Preguntar disponibilidad</button>
+  </section>
+
   <section class="how">
     <h2>¿Cómo pedir?</h2>
     <ol>
@@ -101,6 +109,43 @@
           </div>
           <button type="submit" value="add" class="btn btn-primary" id="mAdd">Añadir · <span id="mPrice"></span></button>
         </div>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Consulta de disponibilidad -->
+  <dialog id="askModal" class="modal modal-sm">
+    <form class="ask-form" id="askForm">
+      <button type="button" class="close" data-close-ask aria-label="Cerrar">×</button>
+      <div id="askFields">
+        <p class="eyebrow">Consulta</p>
+        <h3>¿La tenéis disponible?</h3>
+        <p class="muted">Dinos qué camiseta buscas y te contestamos lo antes posible.</p>
+        <label>Equipo o selección *<input required name="equipo" id="askTeam" placeholder="Ej. Juventus, Boca Juniors, México…"></label>
+        <label>¿Qué camiseta? *
+          <select required name="equipacion">
+            <option>1ª equipación</option><option>2ª equipación</option><option>3ª equipación</option>
+            <option>Portero</option><option>Retro / temporada antigua</option><option>Otra</option>
+          </select>
+        </label>
+        <div class="row">
+          <label>Para
+            <select name="corte"><option>Hombre</option><option>Mujer</option><option>Niño</option><option>Niña</option></select>
+          </label>
+          <label>Talla<input name="talla" placeholder="Ej. M, 8 años"></label>
+        </div>
+        <label>Más detalles<textarea name="mensaje" rows="2" placeholder="Temporada, nombre y dorsal, cantidad…"></textarea></label>
+        <div class="row">
+          <label>Tu nombre *<input required name="nombre" autocomplete="name"></label>
+          <label>Teléfono o email *<input required name="contacto" autocomplete="tel"></label>
+        </div>
+        <button type="submit" class="btn btn-primary" id="sendAsk">Enviar consulta</button>
+      </div>
+      <div id="askDone" class="confirm" hidden>
+        <div class="confirm-icon">✓</div>
+        <h3>¡Consulta enviada!</h3>
+        <p class="muted">Te responderemos en cuanto lo miremos.</p>
+        <button type="button" class="btn btn-ghost" data-close-ask>Seguir mirando</button>
       </div>
     </form>
   </dialog>

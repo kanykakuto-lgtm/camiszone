@@ -53,6 +53,9 @@
     if (t.pattern === "sash") {
       return `<rect width="200" height="220" fill="${c1}"/><path d="M40 0 L80 0 L180 180 L180 230 L150 230 Z" fill="${c2}"/>`;
     }
+    if (t.pattern === "diagonal") {
+      return `<rect width="200" height="220" fill="${c2}"/><path d="M0 0 L200 0 L0 220 Z" fill="${c1}"/>`;
+    }
     if (t.pattern === "hband") {
       return `<rect width="200" height="220" fill="${c1}"/><rect x="0" y="78" width="200" height="34" fill="${c2}"/>`;
     }
@@ -162,7 +165,7 @@
             </div>
           </div>
         </article>`).join("")
-      : `<p class="empty">No hay camisetas que coincidan con «${esc(q)}».</p>`;
+      : `<div class="empty"><p>No tenemos «${esc(q)}» en el catálogo.</p><button class="btn btn-primary" data-ask="${esc(q)}">Preguntar si la tenéis</button></div>`;
   }
 
   $("#tabs").addEventListener("click", (e) => {
@@ -432,6 +435,51 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => el.classList.remove("show"), 2600);
   }
+
+  // ---------------------------------------------------------
+  //  Consultas de disponibilidad
+  // ---------------------------------------------------------
+  const askModal = $("#askModal");
+  document.addEventListener("click", (e) => {
+    const open = e.target.closest("[data-ask]");
+    if (open) {
+      $("#askForm").reset();
+      $("#askFields").hidden = false;
+      $("#askDone").hidden = true;
+      $("#askTeam").value = open.dataset.ask || "";
+      askModal.showModal();
+    }
+    if (e.target.closest("[data-close-ask]") || e.target === askModal) askModal.close();
+  });
+
+  $("#askForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!CONFIG.pedidosUrl) {
+      toast("La tienda aún no tiene configurada la recepción de consultas.");
+      return;
+    }
+    const d = new FormData(e.target);
+    const consulta = { tipo: "consulta", fecha: new Date().toLocaleString("es-ES") };
+    ["nombre", "contacto", "equipo", "equipacion", "corte", "talla", "mensaje"].forEach((k) => (consulta[k] = String(d.get(k) || "").trim()));
+    const btn = $("#sendAsk");
+    btn.disabled = true;
+    btn.textContent = "Enviando…";
+    try {
+      await fetch(CONFIG.pedidosUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(consulta),
+      });
+      $("#askFields").hidden = true;
+      $("#askDone").hidden = false;
+    } catch {
+      toast("No se pudo enviar la consulta. Inténtalo de nuevo.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Enviar consulta";
+    }
+  });
 
   $("#heroShirts").innerHTML = ["barcelona", "real-madrid", "espana-roja"]
     .map((id) => `<div class="hero-shirt">${shirtVisual(TEAMS.find((t) => t.id === id))}</div>`).join("");

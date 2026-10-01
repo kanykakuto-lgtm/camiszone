@@ -4,12 +4,24 @@
  * Pega este código en Extensiones → Apps Script de tu hoja de cálculo
  * y sigue los pasos del README ("Recibir los pedidos").
  *
- * Cada camiseta del pedido se guarda como una fila en la pestaña "Pedidos"
- * y te llega un email con el pedido detallado.
+ * - Cada camiseta de un pedido se guarda como una fila en la pestaña "Pedidos".
+ * - Cada consulta ("¿tenéis esta camiseta?") se guarda en otra hoja de cálculo
+ *   (o en la pestaña "Consultas" si no indicas ninguna).
+ * - Te llega un email de aviso por cada pedido y cada consulta.
+ *
+ * Tu email solo está aquí, en el script: la web nunca lo muestra.
  */
 
-// Email donde quieres recibir el aviso de cada pedido ("" para no recibir email)
+// Email donde quieres recibir los avisos ("" para no recibir email)
 const EMAIL_AVISO = "tu-email@gmail.com";
+
+// ID de la hoja de cálculo de consultas (lo que va entre /d/ y /edit en su dirección).
+// Déjalo vacío ("") para guardarlas en una pestaña "Consultas" de esta misma hoja.
+const CONSULTAS_HOJA_ID = "";
+
+const CABECERA_CONSULTAS = [
+  "Fecha", "Nombre", "Contacto", "Equipo", "Camiseta", "Para", "Talla", "Detalles", "Respondida",
+];
 
 const CABECERA = [
   "Fecha", "Nº pedido", "Cliente", "Teléfono", "Email", "Dirección",
@@ -22,6 +34,11 @@ function doPost(e) {
   lock.waitLock(20000);
   try {
     const p = JSON.parse(e.postData.contents);
+    if (p.tipo === "consulta") {
+      guardarConsulta(p);
+      return ContentService.createTextOutput(JSON.stringify({ ok: true }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
     const hoja = obtenerHoja();
     const c = p.cliente || {};
     const filas = (p.camisetas || []).map((cam) => [
@@ -50,17 +67,44 @@ function doPost(e) {
   }
 }
 
-function obtenerHoja() {
-  const libro = SpreadsheetApp.getActiveSpreadsheet();
-  let hoja = libro.getSheetByName("Pedidos");
-  if (!hoja) hoja = libro.insertSheet("Pedidos");
+function obtenerHoja(libro, nombre, cabecera) {
+  libro = libro || SpreadsheetApp.getActiveSpreadsheet();
+  nombre = nombre || "Pedidos";
+  cabecera = cabecera || CABECERA;
+  let hoja = libro.getSheetByName(nombre);
+  if (!hoja) hoja = libro.insertSheet(nombre);
   if (hoja.getLastRow() === 0) {
-    hoja.appendRow(CABECERA);
-    hoja.getRange(1, 1, 1, CABECERA.length)
+    hoja.appendRow(cabecera);
+    hoja.getRange(1, 1, 1, cabecera.length)
       .setFontWeight("bold").setBackground("#111827").setFontColor("#ffffff");
     hoja.setFrozenRows(1);
   }
   return hoja;
+}
+
+function guardarConsulta(p) {
+  const libro = CONSULTAS_HOJA_ID
+    ? SpreadsheetApp.openById(CONSULTAS_HOJA_ID)
+    : SpreadsheetApp.getActiveSpreadsheet();
+  const hoja = obtenerHoja(libro, "Consultas", CABECERA_CONSULTAS);
+  const fila = [p.fecha, p.nombre, p.contacto, p.equipo, p.equipacion, p.corte, p.talla, p.mensaje, "No"]
+    .map((v) => String(v == null ? "" : v).slice(0, 500));
+  const rango = hoja.getRange(hoja.getLastRow() + 1, 1, 1, fila.length);
+  rango.setNumberFormat("@");
+  rango.setValues([fila]);
+  if (EMAIL_AVISO) {
+    const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    MailApp.sendEmail({
+      to: EMAIL_AVISO,
+      subject: `Consulta: ${fila[3]} (${fila[4]}) · ${fila[1]}`,
+      htmlBody: `<h2>Nueva consulta de disponibilidad</h2>
+        <p><b>Equipo:</b> ${esc(fila[3])}<br><b>Camiseta:</b> ${esc(fila[4])}<br>
+        <b>Para:</b> ${esc(fila[5])} · <b>Talla:</b> ${esc(fila[6]) || "—"}<br>
+        <b>Detalles:</b> ${esc(fila[7]) || "—"}</p>
+        <p><b>Nombre:</b> ${esc(fila[1])}<br><b>Contacto:</b> ${esc(fila[2])}</p>
+        <p><a href="${libro.getUrl()}">Ver todas las consultas</a></p>`,
+    });
+  }
 }
 
 function enviarAviso(p) {

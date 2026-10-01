@@ -34,6 +34,18 @@ Fecha, Nº pedido, Cliente, Teléfono, Email, Dirección, Equipo, Equipación, V
 Nombre, Dorsal, Parche, Cantidad, Precio/ud, Subtotal, Total pedido, Notas y Estado
 (la columna Estado la puedes ir cambiando tú: Pendiente, Pagado, Enviado…).
 
+### Consultas «¿tenéis esta camiseta?»
+
+Los clientes pueden preguntar por camisetas que no están en el catálogo. Las consultas se guardan
+**en otra hoja distinta de los pedidos**, con columnas Fecha, Nombre, Contacto, Equipo, Camiseta,
+Para, Talla, Detalles y Respondida, y te llega un email de aviso.
+
+- Para tenerlas en **otro archivo**: crea otra hoja en [sheets.new](https://sheets.new) (ej. «Consultas CamisZone»),
+  copia su ID (lo que va entre `/d/` y `/edit` en la dirección) y pégalo en `CONSULTAS_HOJA_ID` del script.
+- Si lo dejas vacío, se guardan en una pestaña «Consultas» dentro de la hoja de pedidos.
+
+Tu email **solo está en el script de Google**: la web no lo muestra en ningún sitio.
+
 > Si más adelante cambias el script, vuelve a **Implementar → Gestionar implementaciones → Editar →
 > Nueva versión** para que se apliquen los cambios con la misma URL.
 

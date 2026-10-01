@@ -30,6 +30,8 @@ const COMPS = {
   laliga: "LaLiga",
   segunda: "Segunda",
   premier: "Premier",
+  seriea: "Serie A",
+  ligue1: "Ligue 1",
   champions: "Champions",
   selecciones: "Selecciones",
 };
@@ -37,7 +39,7 @@ const COMPS = {
 // ============================================================
 //  CATÁLOGO 26/27
 //  comps:   competiciones en las que juega (un equipo puede estar en varias)
-//  pattern: "solid" | "stripes" | "hoops" | "halves" | "sash" | "hband" | "band"
+//  pattern: "solid" | "stripes" | "hoops" | "halves" | "sash" | "hband" | "band" | "diagonal"
 //  colors:  colores del cuerpo · sleeves: color de mangas (opcional)
 //  trim:    cuello y puños · text: color del nombre/dorsal
 //  stars:   estrellas sobre el escudo
@@ -114,18 +116,53 @@ const TEAMS = [
   { id: "sunderland", name: "Sunderland", comps: ["premier"], pattern: "stripes", colors: ["#eb172b", "#ffffff"], trim: "#111111", text: "#111111" },
   { id: "tottenham", name: "Tottenham Hotspur", comps: ["premier"], pattern: "solid", colors: ["#ffffff"], trim: "#132257", text: "#132257" },
 
+  // ---------- Serie A ----------
+  { id: "atalanta", name: "Atalanta", comps: ["seriea"], pattern: "stripes", colors: ["#1e71b8", "#111111"], trim: "#111111", text: "#ffffff" },
+  { id: "bologna", name: "Bologna", comps: ["seriea"], pattern: "stripes", colors: ["#a21c26", "#1a2f48"], trim: "#ffffff", text: "#ffffff" },
+  { id: "cagliari", name: "Cagliari", comps: ["seriea"], pattern: "halves", colors: ["#a50e2d", "#002350"], trim: "#ffffff", text: "#ffffff" },
+  { id: "fiorentina", name: "Fiorentina", comps: ["seriea"], pattern: "solid", colors: ["#482e92"], trim: "#ffffff", text: "#ffffff" },
+  { id: "frosinone", name: "Frosinone", comps: ["seriea"], pattern: "solid", colors: ["#ffd400"], trim: "#0047ab", text: "#0047ab" },
+  { id: "genoa", name: "Genoa", comps: ["seriea"], pattern: "halves", colors: ["#a21c26", "#002350"], trim: "#ffffff", text: "#ffffff" },
+  { id: "juventus", name: "Juventus", comps: ["seriea"], pattern: "stripes", colors: ["#111111", "#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "lazio", name: "Lazio", comps: ["seriea"], pattern: "solid", colors: ["#87d8f7"], trim: "#ffffff", text: "#14284b" },
+  { id: "lecce", name: "Lecce", comps: ["seriea"], pattern: "stripes", colors: ["#ffd700", "#d71920"], trim: "#0b2a5b", text: "#0b2a5b" },
+  { id: "milan", name: "AC Milan", comps: ["seriea"], pattern: "stripes", colors: ["#e30613", "#111111"], trim: "#111111", text: "#ffffff" },
+  { id: "monza", name: "Monza", comps: ["seriea"], pattern: "solid", colors: ["#e2001a"], trim: "#ffffff", text: "#ffffff" },
+  { id: "parma", name: "Parma", comps: ["seriea"], pattern: "solid", colors: ["#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "sassuolo", name: "Sassuolo", comps: ["seriea"], pattern: "stripes", colors: ["#00a752", "#111111"], trim: "#111111", text: "#ffffff" },
+  { id: "torino", name: "Torino", comps: ["seriea"], pattern: "solid", colors: ["#8a1e03"], trim: "#ffffff", text: "#ffffff" },
+  { id: "udinese", name: "Udinese", comps: ["seriea"], pattern: "stripes", colors: ["#111111", "#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "venezia", name: "Venezia", comps: ["seriea"], pattern: "solid", colors: ["#111111"], trim: "#f26522", text: "#f26522" },
+
+  // ---------- Ligue 1 ----------
+  { id: "angers", name: "Angers SCO", comps: ["ligue1"], pattern: "stripes", colors: ["#111111", "#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "auxerre", name: "AJ Auxerre", comps: ["ligue1"], pattern: "solid", colors: ["#ffffff"], trim: "#0b4a99", text: "#0b4a99" },
+  { id: "brest", name: "Stade Brestois", comps: ["ligue1"], pattern: "solid", colors: ["#e30613"], trim: "#ffffff", text: "#ffffff" },
+  { id: "le-havre", name: "Le Havre AC", comps: ["ligue1"], pattern: "halves", colors: ["#8dc8e8", "#0a2240"], trim: "#0a2240", text: "#ffffff" },
+  { id: "le-mans", name: "Le Mans FC", comps: ["ligue1"], pattern: "solid", colors: ["#e30613"], trim: "#ffd400", text: "#ffd400" },
+  { id: "lorient", name: "FC Lorient", comps: ["ligue1"], pattern: "solid", colors: ["#f58113"], trim: "#111111", text: "#111111" },
+  { id: "lyon", name: "Olympique de Lyon", comps: ["ligue1"], pattern: "solid", colors: ["#ffffff"], trim: "#da0812", text: "#14387f" },
+  { id: "marseille", name: "Olympique de Marsella", comps: ["ligue1"], pattern: "solid", colors: ["#ffffff"], trim: "#2faee0", text: "#2faee0" },
+  { id: "monaco", name: "AS Monaco", comps: ["ligue1"], pattern: "diagonal", colors: ["#e7001b", "#ffffff"], trim: "#d4af37", text: "#111111" },
+  { id: "nice", name: "OGC Nice", comps: ["ligue1"], pattern: "stripes", colors: ["#c8102e", "#111111"], trim: "#111111", text: "#ffffff" },
+  { id: "paris-fc", name: "Paris FC", comps: ["ligue1"], pattern: "solid", colors: ["#0e2a47"], trim: "#b1d8f3", text: "#ffffff" },
+  { id: "rennes", name: "Stade Rennais", comps: ["ligue1"], pattern: "solid", colors: ["#e13327"], sleeves: "#111111", trim: "#111111", text: "#ffffff" },
+  { id: "strasbourg", name: "RC Strasbourg", comps: ["ligue1"], pattern: "solid", colors: ["#009fe3"], trim: "#ffffff", text: "#ffffff" },
+  { id: "toulouse", name: "Toulouse FC", comps: ["ligue1"], pattern: "solid", colors: ["#5a2d82"], trim: "#ffffff", text: "#ffffff" },
+  { id: "troyes", name: "ES Troyes AC", comps: ["ligue1"], pattern: "solid", colors: ["#0a3d91"], trim: "#ffffff", text: "#ffffff" },
+
   // ---------- Champions League (resto de Europa) ----------
-  { id: "psg", name: "Paris Saint-Germain", comps: ["champions"], pattern: "band", colors: ["#004170", "#da291c", "#ffffff"], trim: "#da291c", text: "#ffffff" },
+  { id: "psg", name: "Paris Saint-Germain", comps: ["ligue1", "champions"], pattern: "band", colors: ["#004170", "#da291c", "#ffffff"], trim: "#da291c", text: "#ffffff" },
   { id: "bayern", name: "Bayern Múnich", comps: ["champions"], pattern: "solid", colors: ["#dc052d"], trim: "#ffffff", text: "#ffffff" },
   { id: "dortmund", name: "Borussia Dortmund", comps: ["champions"], pattern: "solid", colors: ["#fde100"], trim: "#111111", text: "#111111" },
   { id: "leipzig", name: "RB Leipzig", comps: ["champions"], pattern: "solid", colors: ["#ffffff"], trim: "#dd0741", text: "#0c2043" },
   { id: "stuttgart", name: "VfB Stuttgart", comps: ["champions"], pattern: "hband", colors: ["#ffffff", "#e32219"], trim: "#e32219", text: "#e32219" },
-  { id: "inter", name: "Inter de Milán", comps: ["champions"], pattern: "stripes", colors: ["#0068a8", "#111111"], trim: "#d4af37", text: "#ffffff" },
-  { id: "napoli", name: "SSC Napoli", comps: ["champions"], pattern: "solid", colors: ["#12a0d7"], trim: "#ffffff", text: "#ffffff" },
-  { id: "roma", name: "AS Roma", comps: ["champions"], pattern: "solid", colors: ["#8e1f2f"], trim: "#f0bc42", text: "#f0bc42" },
-  { id: "como", name: "Como 1907", comps: ["champions"], pattern: "solid", colors: ["#0d3b8c"], trim: "#ffffff", text: "#ffffff" },
-  { id: "lens", name: "RC Lens", comps: ["champions"], pattern: "solid", colors: ["#ffd400"], sleeves: "#e00010", trim: "#e00010", text: "#e00010" },
-  { id: "lille", name: "LOSC Lille", comps: ["champions"], pattern: "solid", colors: ["#e01e13"], trim: "#20325f", text: "#ffffff" },
+  { id: "inter", name: "Inter de Milán", comps: ["seriea", "champions"], pattern: "stripes", colors: ["#0068a8", "#111111"], trim: "#d4af37", text: "#ffffff" },
+  { id: "napoli", name: "SSC Napoli", comps: ["seriea", "champions"], pattern: "solid", colors: ["#12a0d7"], trim: "#ffffff", text: "#ffffff" },
+  { id: "roma", name: "AS Roma", comps: ["seriea", "champions"], pattern: "solid", colors: ["#8e1f2f"], trim: "#f0bc42", text: "#f0bc42" },
+  { id: "como", name: "Como 1907", comps: ["seriea", "champions"], pattern: "solid", colors: ["#0d3b8c"], trim: "#ffffff", text: "#ffffff" },
+  { id: "lens", name: "RC Lens", comps: ["ligue1", "champions"], pattern: "solid", colors: ["#ffd400"], sleeves: "#e00010", trim: "#e00010", text: "#e00010" },
+  { id: "lille", name: "LOSC Lille", comps: ["ligue1", "champions"], pattern: "solid", colors: ["#e01e13"], trim: "#20325f", text: "#ffffff" },
   { id: "psv", name: "PSV Eindhoven", comps: ["champions"], pattern: "stripes", colors: ["#ed1c24", "#ffffff"], trim: "#111111", text: "#111111" },
   { id: "feyenoord", name: "Feyenoord", comps: ["champions"], pattern: "halves", colors: ["#e2001a", "#ffffff"], trim: "#111111", text: "#111111" },
   { id: "porto", name: "FC Porto", comps: ["champions"], pattern: "stripes", colors: ["#00428c", "#ffffff"], trim: "#00428c", text: "#00428c" },
@@ -152,4 +189,4 @@ const TEAMS = [
 ];
 
 // Nombre del parche de cada competición
-const PARCHES = { laliga: "LaLiga", segunda: "LaLiga Hypermotion", premier: "Premier League", champions: "Champions League" };
+const PARCHES = { laliga: "LaLiga", segunda: "LaLiga Hypermotion", premier: "Premier League", seriea: "Serie A", ligue1: "Ligue 1", champions: "Champions League" };
