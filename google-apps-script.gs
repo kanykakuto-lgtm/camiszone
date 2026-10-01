@@ -12,8 +12,15 @@
  * Tu email solo está aquí, en el script: la web nunca lo muestra.
  */
 
-// Email donde quieres recibir los avisos ("" para no recibir email)
-const EMAIL_AVISO = "tu-email@gmail.com";
+// Los avisos llegan al email de la cuenta de Google donde instales este script.
+// Solo si quieres recibirlos en otro correo, escríbelo aquí (en el editor de Google,
+// no en GitHub, para que nadie lo vea). Pon AVISOS = false para no recibir emails.
+const EMAIL_AVISO = "";
+const AVISOS = true;
+
+function destinatario() {
+  return EMAIL_AVISO || Session.getEffectiveUser().getEmail();
+}
 
 // ID de la hoja de cálculo de consultas (lo que va entre /d/ y /edit en su dirección).
 // Déjalo vacío ("") para guardarlas en una pestaña "Consultas" de esta misma hoja.
@@ -56,7 +63,7 @@ function doPost(e) {
       hoja.getRange(inicio, 16, filas.length, 3).setNumberFormat("#,##0.00 €");
       rango.setValues(filas);
     }
-    if (EMAIL_AVISO) enviarAviso(p);
+    if (AVISOS) enviarAviso(p);
     return ContentService.createTextOutput(JSON.stringify({ ok: true }))
       .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
@@ -92,10 +99,10 @@ function guardarConsulta(p) {
   const rango = hoja.getRange(hoja.getLastRow() + 1, 1, 1, fila.length);
   rango.setNumberFormat("@");
   rango.setValues([fila]);
-  if (EMAIL_AVISO) {
+  if (AVISOS) {
     const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     MailApp.sendEmail({
-      to: EMAIL_AVISO,
+      to: destinatario(),
       subject: `Consulta: ${fila[3]} (${fila[4]}) · ${fila[1]}`,
       htmlBody: `<h2>Nueva consulta de disponibilidad</h2>
         <p><b>Equipo:</b> ${esc(fila[3])}<br><b>Camiseta:</b> ${esc(fila[4])}<br>
@@ -136,7 +143,7 @@ function enviarAviso(p) {
     <p style="font-size:18px"><b>Total: ${euros(p.total)}</b></p>
     <p><a href="${SpreadsheetApp.getActiveSpreadsheet().getUrl()}">Ver todos los pedidos</a></p>`;
   MailApp.sendEmail({
-    to: EMAIL_AVISO,
+    to: destinatario(),
     subject: `Nuevo pedido ${p.pedido} · ${c.nombre} · ${euros(p.total)}`,
     htmlBody: html,
     replyTo: c.email || undefined,

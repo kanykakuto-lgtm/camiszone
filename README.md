@@ -15,8 +15,7 @@ Abre `index.html` en el navegador (o súbela a GitHub Pages, Netlify, etc.). No 
 
 1. Entra en [sheets.new](https://sheets.new) con tu cuenta de Google y ponle nombre, por ejemplo «Pedidos CamisZone».
 2. Menú **Extensiones → Apps Script**.
-3. Borra lo que haya, pega todo el contenido de `google-apps-script.gs` y cambia
-   `EMAIL_AVISO` por tu email. Guarda (icono del disquete).
+3. Borra lo que haya, pega todo el contenido de `google-apps-script.gs`. Guarda (icono del disquete).
 4. Arriba a la derecha: **Implementar → Nueva implementación**.
    - Tipo (rueda dentada): **Aplicación web**.
    - Ejecutar como: **Yo**.
@@ -44,7 +43,7 @@ Para, Talla, Detalles y Respondida, y te llega un email de aviso.
   copia su ID (lo que va entre `/d/` y `/edit` en la dirección) y pégalo en `CONSULTAS_HOJA_ID` del script.
 - Si lo dejas vacío, se guardan en una pestaña «Consultas» dentro de la hoja de pedidos.
 
-Tu email **solo está en el script de Google**: la web no lo muestra en ningún sitio.
+Los avisos llegan al **email de tu cuenta de Google**, sin escribirlo en ningún sitio: ni la web ni GitHub lo muestran.
 
 > Si más adelante cambias el script, vuelve a **Implementar → Gestionar implementaciones → Editar →
 > Nueva versión** para que se apliquen los cambios con la misma URL.
