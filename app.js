@@ -159,11 +159,11 @@
   const modal = $("#productModal");
   let sel = null;
 
-  const isKid = (size) => CONFIG.tallasNino.includes(size);
+  const isKid = (fit) => fit === "Niño" || fit === "Niña";
 
   function unitPrice(o) {
     let p = o.version === "jugador" ? P.jugador : P.fan;
-    if (isKid(o.size)) p -= P.ninoDescuento;
+    if (isKid(o.fit)) p -= P.ninoDescuento;
     if (o.player || o.number !== "") p += P.personalizacion;
     if (o.patch) p += P.parche;
     return p;
@@ -177,7 +177,7 @@
 
   function openProduct(id) {
     const t = TEAMS.find((x) => x.id === id);
-    sel = { team: t, version: "fan", size: "M", player: "", number: "", patch: false, qty: 1, side: "front" };
+    sel = { team: t, version: "fan", fit: "Hombre", size: "M", player: "", number: "", patch: false, qty: 1, side: "front" };
     $("#mCat").textContent = `${t.cat} · Temporada 26/27`;
     $("#mName").textContent = t.name;
     $("#mKit").textContent = t.kit;
@@ -185,10 +185,8 @@
       { value: "fan", label: `Aficionado · ${eur(P.fan)}` },
       { value: "jugador", label: `Jugador · ${eur(P.jugador)}` },
     ], sel.version, "version");
-    chips($("#mSize"), [
-      ...CONFIG.tallasAdulto.map((s) => ({ value: s, label: s })),
-      ...CONFIG.tallasNino.map((s) => ({ value: s, label: `Niño ${s}` })),
-    ], sel.size, "size");
+    chips($("#mFit"), Object.keys(CONFIG.cortes).map((c) => ({ value: c, label: c })), sel.fit, "fit");
+    renderSizes();
     $("#mPersPrice").textContent = P.personalizacion ? `(+${eur(P.personalizacion)})` : "(incluida)";
     $("#mPatchLabel").textContent = `Parche ${t.patch || "de competición"} ${P.parche ? `(+${eur(P.parche)})` : "(incluido)"}`;
     $("#mPlayer").value = "";
@@ -197,6 +195,12 @@
     setSide("front");
     updateModal();
     modal.showModal();
+  }
+
+  function renderSizes() {
+    const sizes = CONFIG.cortes[sel.fit];
+    if (!sizes.includes(sel.size)) sel.size = sizes.includes("M") ? "M" : sizes[Math.floor(sizes.length / 2)];
+    chips($("#mSize"), sizes.map((s) => ({ value: s, label: s })), sel.size, "size");
   }
 
   function setSide(side) {
@@ -212,6 +216,7 @@
 
   $("#productForm").addEventListener("change", (e) => {
     if (e.target.name === "version") sel.version = e.target.value;
+    if (e.target.name === "fit") { sel.fit = e.target.value; renderSizes(); }
     if (e.target.name === "size") sel.size = e.target.value;
     if (e.target.id === "mPatch") sel.patch = e.target.checked;
     updateModal();
@@ -241,7 +246,7 @@
   $("#productForm").addEventListener("submit", (e) => {
     if (e.submitter && e.submitter.value === "add") {
       cart.push({
-        id: sel.team.id, version: sel.version, size: sel.size,
+        id: sel.team.id, version: sel.version, fit: sel.fit, size: sel.size,
         player: sel.player, number: sel.number, patch: sel.patch, qty: sel.qty,
       });
       saveCart();
@@ -254,8 +259,9 @@
   // ---------------------------------------------------------
   //  Carrito
   // ---------------------------------------------------------
+  const isKidSize = (size) => /años/.test(size);
   let cart = [];
-  try { cart = JSON.parse(localStorage.getItem("camiszone-cart") || "[]").filter((i) => TEAMS.some((t) => t.id === i.id)); } catch { cart = []; }
+  try { cart = JSON.parse(localStorage.getItem("camiszone-cart") || "[]").filter((i) => TEAMS.some((t) => t.id === i.id)).map((i) => ({ fit: isKidSize(i.size) ? "Niño" : "Hombre", ...i })); } catch { cart = []; }
   function saveCart() { try { localStorage.setItem("camiszone-cart", JSON.stringify(cart)); } catch {} }
 
   const teamOf = (i) => TEAMS.find((t) => t.id === i.id);
@@ -263,7 +269,7 @@
   const total = () => cart.reduce((s, i) => s + lineTotal(i), 0);
 
   function describe(i) {
-    const parts = [i.version === "jugador" ? "Versión jugador" : "Versión aficionado", `Talla ${i.size}`];
+    const parts = [i.version === "jugador" ? "Versión jugador" : "Versión aficionado", i.fit, `Talla ${i.size}`];
     if (i.player || i.number !== "") parts.push(`${i.player || "—"} ${i.number !== "" ? "#" + i.number : ""}`.trim());
     if (i.patch) parts.push("Con parche");
     return parts;
@@ -308,35 +314,86 @@
   $("#backdrop").addEventListener("click", closeCart);
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeCart(); });
 
-  function orderText(data) {
-    const lines = cart.map((i, n) => {
-      const t = teamOf(i);
-      return `${n + 1}) ${t.name} – ${t.kit} 26/27\n   ${describe(i).join(" · ")}\n   ${i.qty} × ${eur(unitPrice(i))} = ${eur(lineTotal(i))}`;
-    });
-    return [
-      "¡Hola! Quiero hacer este pedido en CamisZone:",
-      "",
-      ...lines,
-      "",
-      `TOTAL: ${eur(total())}`,
-      "",
-      `Nombre: ${data.get("nombre")}`,
-      `Teléfono: ${data.get("telefono")}`,
-      data.get("direccion") ? `Dirección: ${data.get("direccion")}` : "",
-      data.get("notas") ? `Notas: ${data.get("notas")}` : "",
-    ].filter((l, i, a) => l !== "" || a[i - 1] !== "").join("\n").trim();
+  function newOrderId() {
+    const d = new Date();
+    const ymd = `${String(d.getFullYear()).slice(2)}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}`;
+    return `CZ-${ymd}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
   }
 
-  $("#orderForm").addEventListener("submit", (e) => {
+  function orderPayload(data) {
+    return {
+      pedido: newOrderId(),
+      fecha: new Date().toLocaleString("es-ES"),
+      cliente: {
+        nombre: data.get("nombre").trim(),
+        telefono: data.get("telefono").trim(),
+        email: data.get("email").trim(),
+        direccion: data.get("direccion").trim(),
+        notas: data.get("notas").trim(),
+      },
+      camisetas: cart.map((i) => {
+        const t = teamOf(i);
+        return {
+          equipo: t.name,
+          equipacion: `${t.kit} 26/27`,
+          version: i.version === "jugador" ? "Jugador" : "Aficionado",
+          corte: i.fit,
+          talla: i.size,
+          nombre: i.player,
+          dorsal: i.number,
+          parche: i.patch ? `Sí (${t.patch || "competición"})` : "No",
+          cantidad: i.qty,
+          precioUnidad: unitPrice(i),
+          subtotal: lineTotal(i),
+        };
+      }),
+      total: total(),
+    };
+  }
+
+  function showConfirmation(order) {
+    $("#orderForm").hidden = true;
+    $("#cartItems").innerHTML = `<div class="confirm">
+      <div class="confirm-icon">✓</div>
+      <h3>¡Pedido recibido!</h3>
+      <p>Tu número de pedido es <b>${esc(order.pedido)}</b>.</p>
+      <p class="muted">Te contactaremos al ${esc(order.cliente.telefono)} para confirmar el pago y la entrega.</p>
+      <ul>${order.camisetas.map((c) => `<li>${c.cantidad} × ${esc(c.equipo)} · ${esc(c.version)} · ${esc(c.corte)} ${esc(c.talla)}${c.nombre || c.dorsal ? ` · ${esc(c.nombre)} ${esc(c.dorsal)}` : ""}</li>`).join("")}</ul>
+      <p>Total: <b>${eur(order.total)}</b></p>
+    </div>`;
+    $("#cartTotal").textContent = eur(order.total);
+  }
+
+  $("#orderForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!cart.length) return;
-    const text = orderText(new FormData(e.target));
-    const via = e.submitter && e.submitter.dataset.via;
-    const url = via === "email"
-      ? `mailto:${CONFIG.email}?subject=${encodeURIComponent("Pedido CamisZone")}&body=${encodeURIComponent(text)}`
-      : `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(text)}`;
-    window.open(url, "_blank");
-    toast("¡Pedido preparado! Envíalo para confirmarlo.");
+    if (!CONFIG.pedidosUrl) {
+      toast("La tienda aún no tiene configurada la recepción de pedidos.");
+      return;
+    }
+    const order = orderPayload(new FormData(e.target));
+    const btn = $("#sendOrder");
+    btn.disabled = true;
+    btn.textContent = "Enviando…";
+    try {
+      // Apps Script no devuelve cabeceras CORS: se envía como texto y sin leer la respuesta
+      await fetch(CONFIG.pedidosUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(order),
+      });
+      cart = [];
+      saveCart();
+      $("#cartCount").textContent = 0;
+      e.target.reset();
+      showConfirmation(order);
+    } catch {
+      toast("No se pudo enviar el pedido. Revisa tu conexión e inténtalo de nuevo.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Enviar pedido";
+    }
   });
 
   // ---------------------------------------------------------

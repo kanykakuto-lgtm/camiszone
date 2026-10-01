@@ -30,7 +30,6 @@ input, textarea, select { font: inherit; }
 .btn:active { transform: scale(.97); }
 .btn-primary { background: var(--accent); color: var(--accent-ink); }
 .btn-sm { padding: 8px 16px; font-size: 14px; }
-.btn-whatsapp { background: #25d366; color: #062b14; width: 100%; }
 .btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--line); width: 100%; }
 .link { background: none; border: 0; color: var(--muted); text-decoration: underline; padding: 0; font-size: 13px; }
 
@@ -133,6 +132,13 @@ legend { font-weight: 700; font-size: 14px; margin-bottom: 8px; padding: 0; }
 .order-form { display: flex; flex-direction: column; gap: 8px; padding: 0 20px 20px; }
 .order-form h3 { font-size: 18px; margin: 4px 0; }
 .order-form[hidden] { display: none; }
+.order-form .btn { width: 100%; }
+.btn:disabled { opacity: .6; cursor: wait; }
+.confirm { text-align: center; padding: 24px 4px; }
+.confirm-icon { width: 56px; height: 56px; margin: 0 auto 12px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-size: 28px; font-weight: 800; }
+.confirm h3 { font-size: 24px; margin-bottom: 8px; }
+.confirm p { margin: 6px 0; }
+.confirm ul { text-align: left; font-size: 14px; color: var(--muted); padding-left: 18px; margin: 14px 0; }
 .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 30; opacity: 0; pointer-events: none; transition: opacity .3s; }
 .backdrop.show { opacity: 1; pointer-events: auto; }
 .toast { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 40px); background: var(--text); color: var(--bg); padding: 12px 20px; border-radius: 999px; font-weight: 600; opacity: 0; transition: all .3s; z-index: 60; pointer-events: none; max-width: calc(100% - 32px); text-align: center; }

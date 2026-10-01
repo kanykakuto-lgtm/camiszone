@@ -43,8 +43,8 @@
     <h2>¿Cómo pedir?</h2>
     <ol>
       <li><b>Elige</b> tu camiseta y pulsa «Personalizar».</li>
-      <li><b>Configura</b> versión, talla, nombre y dorsal.</li>
-      <li><b>Envía</b> el pedido por WhatsApp o email con tus datos.</li>
+      <li><b>Configura</b> versión, si es para hombre, mujer, niño o niña, talla, nombre y dorsal.</li>
+      <li><b>Envía</b> el pedido con tus datos y recibe tu número de pedido.</li>
       <li><b>Te confirmamos</b> el pago y el plazo de entrega.</li>
     </ol>
   </section>
@@ -72,6 +72,11 @@
         <fieldset>
           <legend>Versión</legend>
           <div class="chips" id="mVersion"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Para</legend>
+          <div class="chips" id="mFit"></div>
         </fieldset>
 
         <fieldset>
@@ -114,10 +119,10 @@
       <h3>Tus datos</h3>
       <input required name="nombre" placeholder="Nombre y apellidos" autocomplete="name">
       <input required name="telefono" type="tel" placeholder="Teléfono" autocomplete="tel">
+      <input name="email" type="email" placeholder="Email (opcional)" autocomplete="email">
       <input name="direccion" placeholder="Dirección de envío (o «recojo en mano»)" autocomplete="street-address">
       <textarea name="notas" rows="2" placeholder="Notas (opcional)"></textarea>
-      <button type="submit" class="btn btn-whatsapp" data-via="whatsapp">Enviar pedido por WhatsApp</button>
-      <button type="submit" class="btn btn-ghost" data-via="email">Enviar por email</button>
+      <button type="submit" class="btn btn-primary" id="sendOrder">Enviar pedido</button>
     </form>
   </aside>
   <div class="backdrop" id="backdrop"></div>

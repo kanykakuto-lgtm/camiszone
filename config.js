@@ -2,21 +2,25 @@
 //  CONFIGURACIÓN DE LA TIENDA — edita aquí precios y contacto
 // ============================================================
 const CONFIG = {
-  // Tu número de WhatsApp con prefijo de país, sin "+" ni espacios (ej. 34612345678)
-  whatsapp: "34600000000",
-  // Email donde quieres recibir los pedidos
-  email: "pedidos@camiszone.com",
+  // Dirección de tu Google Apps Script (ver README → "Recibir los pedidos").
+  // Cada pedido se guarda en tu hoja de Google Sheets y te llega un email.
+  pedidosUrl: "",
 
   precios: {
     fan: 20,            // Versión aficionado
     jugador: 25,        // Versión jugador
     personalizacion: 0, // Nombre + dorsal (0 = incluido)
     parche: 0,          // Parche de competición (0 = incluido)
-    ninoDescuento: 0,   // Descuento tallas de niño
+    ninoDescuento: 0,   // Descuento tallas de niño/niña
   },
 
-  tallasAdulto: ["S", "M", "L", "XL", "XXL"],
-  tallasNino: ["4 años", "6 años", "8 años", "10 años", "12 años", "14 años"],
+  // Corte de la camiseta y las tallas disponibles para cada uno
+  cortes: {
+    "Hombre": ["S", "M", "L", "XL", "XXL"],
+    "Mujer": ["XS", "S", "M", "L", "XL"],
+    "Niño": ["4 años", "6 años", "8 años", "10 años", "12 años", "14 años"],
+    "Niña": ["4 años", "6 años", "8 años", "10 años", "12 años", "14 años"],
+  },
 };
 
 // ============================================================
