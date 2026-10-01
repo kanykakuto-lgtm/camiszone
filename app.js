@@ -53,6 +53,13 @@
     if (t.pattern === "sash") {
       return `<rect width="200" height="220" fill="${c1}"/><path d="M40 0 L80 0 L180 180 L180 230 L150 230 Z" fill="${c2}"/>`;
     }
+    if (t.pattern === "checks") {
+      let out = `<rect width="200" height="220" fill="${c1}"/>`;
+      const q = 16;
+      for (let y = 0, r = 0; y < 222; y += q, r++)
+        for (let x = 4, k = 0; x < 200; x += q, k++) if ((r + k) % 2) out += `<rect x="${x}" y="${y}" width="${q}" height="${q}" fill="${c2}"/>`;
+      return out;
+    }
     if (t.pattern === "diagonal") {
       return `<rect width="200" height="220" fill="${c2}"/><path d="M0 0 L200 0 L0 220 Z" fill="${c1}"/>`;
     }

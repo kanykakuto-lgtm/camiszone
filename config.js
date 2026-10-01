@@ -39,7 +39,7 @@ const COMPS = {
 // ============================================================
 //  CATÁLOGO 26/27
 //  comps:   competiciones en las que juega (un equipo puede estar en varias)
-//  pattern: "solid" | "stripes" | "hoops" | "halves" | "sash" | "hband" | "band" | "diagonal"
+//  pattern: "solid" | "stripes" | "hoops" | "halves" | "sash" | "hband" | "band" | "diagonal" | "checks"
 //  colors:  colores del cuerpo · sleeves: color de mangas (opcional)
 //  trim:    cuello y puños · text: color del nombre/dorsal
 //  stars:   estrellas sobre el escudo
@@ -179,14 +179,57 @@ const TEAMS = [
   { id: "shakhtar", name: "Shakhtar Donetsk", comps: ["champions"], pattern: "stripes", colors: ["#f26a21", "#111111"], trim: "#111111", text: "#ffffff" },
   { id: "sabah", name: "Sabah FK", comps: ["champions"], pattern: "solid", colors: ["#ffffff"], trim: "#e05a1b", text: "#e05a1b" },
 
-  // ---------- Selecciones ----------
+  // ---------- Selecciones (las 48 del Mundial 2026) ----------
   { id: "espana-roja", name: "España", comps: ["selecciones"], kit: "1ª equipación · Roja", pattern: "solid", colors: ["#c60b1e"], trim: "#ffc400", text: "#ffc400", stars: 2, starColor: "#ffc400", patch: "Campeones del Mundo" },
   { id: "espana-blanca", name: "España", comps: ["selecciones"], kit: "2ª equipación · Blanca", pattern: "solid", colors: ["#ffffff"], trim: "#c60b1e", text: "#c60b1e", stars: 2, starColor: "#d4a017", patch: "Campeones del Mundo" },
-  { id: "argentina", name: "Argentina", comps: ["selecciones"], pattern: "stripes", colors: ["#75aadb", "#ffffff"], trim: "#111111", text: "#111111", stars: 3, starColor: "#d4a017", patch: "Campeones del Mundo" },
-  { id: "brasil", name: "Brasil", comps: ["selecciones"], pattern: "solid", colors: ["#ffdf00"], trim: "#009c3b", text: "#009c3b", stars: 5, starColor: "#009c3b", patch: "Campeones del Mundo" },
-  { id: "francia", name: "Francia", comps: ["selecciones"], pattern: "solid", colors: ["#1d2a5b"], trim: "#ffffff", text: "#ffffff", stars: 2, starColor: "#d4a017", patch: "Campeones del Mundo" },
+  { id: "alemania", name: "Alemania", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#111111", text: "#111111", stars: 4, starColor: "#d4a017" },
+  { id: "arabia-saudi", name: "Arabia Saudí", comps: ["selecciones"], pattern: "solid", colors: ["#006c35"], trim: "#ffffff", text: "#ffffff" },
+  { id: "argelia", name: "Argelia", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#006233", text: "#006233" },
+  { id: "argentina", name: "Argentina", comps: ["selecciones"], pattern: "stripes", colors: ["#75aadb", "#ffffff"], trim: "#111111", text: "#111111", stars: 3, starColor: "#d4a017" },
+  { id: "australia", name: "Australia", comps: ["selecciones"], pattern: "solid", colors: ["#ffcd00"], trim: "#00843d", text: "#00843d" },
+  { id: "austria", name: "Austria", comps: ["selecciones"], pattern: "solid", colors: ["#ed2939"], trim: "#ffffff", text: "#ffffff" },
+  { id: "belgica", name: "Bélgica", comps: ["selecciones"], pattern: "solid", colors: ["#c8102e"], trim: "#fdda24", text: "#fdda24" },
+  { id: "bosnia", name: "Bosnia y Herzegovina", comps: ["selecciones"], pattern: "solid", colors: ["#002395"], trim: "#fecb00", text: "#ffffff" },
+  { id: "brasil", name: "Brasil", comps: ["selecciones"], pattern: "solid", colors: ["#ffdf00"], trim: "#009c3b", text: "#009c3b", stars: 5, starColor: "#009c3b" },
+  { id: "cabo-verde", name: "Cabo Verde", comps: ["selecciones"], pattern: "solid", colors: ["#003893"], trim: "#cf2027", text: "#ffffff" },
+  { id: "canada", name: "Canadá", comps: ["selecciones"], pattern: "solid", colors: ["#d80621"], trim: "#ffffff", text: "#ffffff" },
+  { id: "chequia", name: "Chequia", comps: ["selecciones"], pattern: "solid", colors: ["#d7141a"], trim: "#11457e", text: "#ffffff" },
+  { id: "colombia", name: "Colombia", comps: ["selecciones"], pattern: "solid", colors: ["#fcd116"], trim: "#003893", text: "#003893" },
+  { id: "corea-sur", name: "Corea del Sur", comps: ["selecciones"], pattern: "solid", colors: ["#e2231a"], trim: "#111111", text: "#ffffff" },
+  { id: "costa-marfil", name: "Costa de Marfil", comps: ["selecciones"], pattern: "solid", colors: ["#f77f00"], trim: "#009e60", text: "#ffffff" },
+  { id: "croacia", name: "Croacia", comps: ["selecciones"], pattern: "checks", colors: ["#ffffff", "#e30613"], trim: "#171796", text: "#171796" },
+  { id: "curazao", name: "Curazao", comps: ["selecciones"], pattern: "solid", colors: ["#002b7f"], trim: "#f9e814", text: "#f9e814" },
+  { id: "ecuador", name: "Ecuador", comps: ["selecciones"], pattern: "solid", colors: ["#ffd100"], trim: "#034ea2", text: "#034ea2" },
+  { id: "egipto", name: "Egipto", comps: ["selecciones"], pattern: "solid", colors: ["#c8102e"], trim: "#111111", text: "#ffffff" },
+  { id: "escocia", name: "Escocia", comps: ["selecciones"], pattern: "solid", colors: ["#1b2d5b"], trim: "#ffffff", text: "#ffffff" },
+  { id: "estados-unidos", name: "Estados Unidos", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#0a3161", text: "#0a3161" },
+  { id: "francia", name: "Francia", comps: ["selecciones"], pattern: "solid", colors: ["#1d2a5b"], trim: "#ffffff", text: "#ffffff", stars: 2, starColor: "#d4a017" },
+  { id: "ghana", name: "Ghana", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#006b3f", text: "#111111" },
+  { id: "haiti", name: "Haití", comps: ["selecciones"], pattern: "solid", colors: ["#00209f"], trim: "#d21034", text: "#ffffff" },
+  { id: "inglaterra", name: "Inglaterra", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#1d2a5b", text: "#1d2a5b", stars: 1, starColor: "#1d2a5b" },
+  { id: "irak", name: "Irak", comps: ["selecciones"], pattern: "solid", colors: ["#007a3d"], trim: "#ffffff", text: "#ffffff" },
+  { id: "iran", name: "Irán", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#da0000", text: "#239f40" },
+  { id: "japon", name: "Japón", comps: ["selecciones"], pattern: "solid", colors: ["#1a2b7a"], trim: "#e60012", text: "#ffffff" },
+  { id: "jordania", name: "Jordania", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#ce1126", text: "#ce1126" },
+  { id: "marruecos", name: "Marruecos", comps: ["selecciones"], pattern: "solid", colors: ["#c1272d"], trim: "#006233", text: "#ffffff" },
+  { id: "mexico", name: "México", comps: ["selecciones"], pattern: "solid", colors: ["#006847"], trim: "#ce1126", text: "#ffffff" },
+  { id: "noruega", name: "Noruega", comps: ["selecciones"], pattern: "solid", colors: ["#ba0c2f"], trim: "#00205b", text: "#ffffff" },
+  { id: "nueva-zelanda", name: "Nueva Zelanda", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#111111", text: "#111111" },
+  { id: "paises-bajos", name: "Países Bajos", comps: ["selecciones"], pattern: "solid", colors: ["#f36c21"], trim: "#1b2f6b", text: "#1b2f6b" },
+  { id: "panama", name: "Panamá", comps: ["selecciones"], pattern: "solid", colors: ["#da121a"], trim: "#072357", text: "#ffffff" },
+  { id: "paraguay", name: "Paraguay", comps: ["selecciones"], pattern: "stripes", colors: ["#d52b1e", "#ffffff"], trim: "#0038a8", text: "#0038a8" },
   { id: "portugal", name: "Portugal", comps: ["selecciones"], pattern: "solid", colors: ["#c8102e"], trim: "#046a38", text: "#ffd100", patch: "Nations League" },
+  { id: "qatar", name: "Qatar", comps: ["selecciones"], pattern: "solid", colors: ["#8a1538"], trim: "#ffffff", text: "#ffffff" },
+  { id: "rd-congo", name: "RD Congo", comps: ["selecciones"], pattern: "solid", colors: ["#007fff"], trim: "#ce1021", text: "#f7d618" },
+  { id: "senegal", name: "Senegal", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#00853f", text: "#00853f" },
+  { id: "sudafrica", name: "Sudáfrica", comps: ["selecciones"], pattern: "solid", colors: ["#ffb612"], trim: "#007749", text: "#007749" },
+  { id: "suecia", name: "Suecia", comps: ["selecciones"], pattern: "solid", colors: ["#fecc02"], trim: "#006aa7", text: "#006aa7" },
+  { id: "suiza", name: "Suiza", comps: ["selecciones"], pattern: "solid", colors: ["#d52b1e"], trim: "#ffffff", text: "#ffffff" },
+  { id: "tunez", name: "Túnez", comps: ["selecciones"], pattern: "solid", colors: ["#e70013"], trim: "#ffffff", text: "#ffffff" },
+  { id: "turquia", name: "Turquía", comps: ["selecciones"], pattern: "solid", colors: ["#e30a17"], trim: "#ffffff", text: "#ffffff" },
+  { id: "uruguay", name: "Uruguay", comps: ["selecciones"], pattern: "solid", colors: ["#5cbfeb"], trim: "#111111", text: "#111111", stars: 4, starColor: "#d4a017" },
+  { id: "uzbekistan", name: "Uzbekistán", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#0099b5", text: "#0099b5" },
 ];
 
 // Nombre del parche de cada competición
-const PARCHES = { laliga: "LaLiga", segunda: "LaLiga Hypermotion", premier: "Premier League", seriea: "Serie A", ligue1: "Ligue 1", champions: "Champions League" };
+const PARCHES = { laliga: "LaLiga", segunda: "LaLiga Hypermotion", premier: "Premier League", seriea: "Serie A", ligue1: "Ligue 1", champions: "Champions League", selecciones: "Mundial 2026" };
