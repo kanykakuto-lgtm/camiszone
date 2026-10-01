@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CamisZone · Camisetas de fútbol 26/27</title>
+  <meta name="description" content="Pide tu camiseta de fútbol de la temporada 26/27 personalizada con nombre y dorsal.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a href="#" class="logo">Camis<span>Zone</span></a>
+    <button class="cart-btn" id="openCart" aria-label="Ver pedido">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M7 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM5.2 4l.4 2H21l-2.2 8.2a2 2 0 0 1-1.9 1.5H8.4a2 2 0 0 1-2-1.6L4.2 2H1V0h4.8l.4 2Z" transform="translate(0 1)"/></svg>
+      <span>Mi pedido</span>
+      <b id="cartCount">0</b>
+    </button>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text">
+      <p class="eyebrow">Temporada 2026/27</p>
+      <h1>Tu camiseta,<br>tu nombre, tu dorsal.</h1>
+      <p>Elige equipo, talla y personalización. Nos mandas el pedido en un clic y te contestamos enseguida.</p>
+      <a href="#catalogo" class="btn btn-primary">Ver camisetas</a>
+    </div>
+    <div class="hero-shirts" id="heroShirts"></div>
+  </section>
+
+  <main id="catalogo" class="catalog">
+    <div class="catalog-head">
+      <h2>Catálogo 26/27</h2>
+      <input type="search" id="search" placeholder="Buscar equipo…" aria-label="Buscar equipo">
+    </div>
+    <nav class="tabs" id="tabs" aria-label="Filtrar por categoría"></nav>
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <section class="how">
+    <h2>¿Cómo pedir?</h2>
+    <ol>
+      <li><b>Elige</b> tu camiseta y pulsa «Personalizar».</li>
+      <li><b>Configura</b> versión, talla, nombre y dorsal.</li>
+      <li><b>Envía</b> el pedido por WhatsApp o email con tus datos.</li>
+      <li><b>Te confirmamos</b> el pago y el plazo de entrega.</li>
+    </ol>
+  </section>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> CamisZone · Las imágenes son ilustraciones con los colores de cada equipo.</p>
+  </footer>
+
+  <!-- Modal personalizar -->
+  <dialog id="productModal" class="modal">
+    <form method="dialog" class="modal-inner" id="productForm">
+      <button class="close" value="cancel" aria-label="Cerrar">×</button>
+      <div class="modal-preview">
+        <div class="preview-shirt" id="previewShirt"></div>
+        <div class="flip">
+          <button type="button" data-side="front" class="active">Delante</button>
+          <button type="button" data-side="back">Detrás</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p class="eyebrow" id="mCat"></p>
+        <h3 id="mName"></h3>
+        <p class="muted" id="mKit"></p>
+
+        <fieldset>
+          <legend>Versión</legend>
+          <div class="chips" id="mVersion"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Talla</legend>
+          <div class="chips" id="mSize"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Personalización <span class="muted" id="mPersPrice"></span></legend>
+          <div class="row">
+            <input type="text" id="mPlayer" maxlength="12" placeholder="Nombre (ej. PEDRI)" autocomplete="off">
+            <input type="number" id="mNumber" min="0" max="99" placeholder="Nº" inputmode="numeric">
+          </div>
+          <label class="check"><input type="checkbox" id="mPatch"> <span id="mPatchLabel"></span></label>
+        </fieldset>
+
+        <div class="row qty-row">
+          <div class="qty">
+            <button type="button" id="qtyMinus" aria-label="Menos">−</button>
+            <span id="mQty">1</span>
+            <button type="button" id="qtyPlus" aria-label="Más">+</button>
+          </div>
+          <button type="submit" value="add" class="btn btn-primary" id="mAdd">Añadir · <span id="mPrice"></span></button>
+        </div>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Carrito -->
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <h2>Mi pedido</h2>
+      <button class="close" id="closeCart" aria-label="Cerrar">×</button>
+    </div>
+    <div class="drawer-items" id="cartItems"></div>
+    <div class="drawer-total">
+      <span>Total</span><b id="cartTotal">0,00 €</b>
+    </div>
+    <form class="order-form" id="orderForm">
+      <h3>Tus datos</h3>
+      <input required name="nombre" placeholder="Nombre y apellidos" autocomplete="name">
+      <input required name="telefono" type="tel" placeholder="Teléfono" autocomplete="tel">
+      <input name="direccion" placeholder="Dirección de envío (o «recojo en mano»)" autocomplete="street-address">
+      <textarea name="notas" rows="2" placeholder="Notas (opcional)"></textarea>
+      <button type="submit" class="btn btn-whatsapp" data-via="whatsapp">Enviar pedido por WhatsApp</button>
+      <button type="submit" class="btn btn-ghost" data-via="email">Enviar por email</button>
+    </form>
+  </aside>
+  <div class="backdrop" id="backdrop"></div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
