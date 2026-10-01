@@ -8,11 +8,11 @@ const CONFIG = {
   email: "pedidos@camiszone.com",
 
   precios: {
-    fan: 25,            // Versión aficionado
-    jugador: 35,        // Versión jugador
-    personalizacion: 5, // Nombre + dorsal
-    parche: 3,          // Parche de competición
-    ninoDescuento: 5,   // Descuento tallas de niño
+    fan: 20,            // Versión aficionado
+    jugador: 25,        // Versión jugador
+    personalizacion: 0, // Nombre + dorsal (0 = incluido)
+    parche: 0,          // Parche de competición (0 = incluido)
+    ninoDescuento: 0,   // Descuento tallas de niño
   },
 
   tallasAdulto: ["S", "M", "L", "XL", "XXL"],

@@ -189,8 +189,8 @@
       ...CONFIG.tallasAdulto.map((s) => ({ value: s, label: s })),
       ...CONFIG.tallasNino.map((s) => ({ value: s, label: `Niño ${s}` })),
     ], sel.size, "size");
-    $("#mPersPrice").textContent = `(+${eur(P.personalizacion)})`;
-    $("#mPatchLabel").textContent = `Parche ${t.patch || "de competición"} (+${eur(P.parche)})`;
+    $("#mPersPrice").textContent = P.personalizacion ? `(+${eur(P.personalizacion)})` : "(incluida)";
+    $("#mPatchLabel").textContent = `Parche ${t.patch || "de competición"} ${P.parche ? `(+${eur(P.parche)})` : "(incluido)"}`;
     $("#mPlayer").value = "";
     $("#mNumber").value = "";
     $("#mPatch").checked = false;
