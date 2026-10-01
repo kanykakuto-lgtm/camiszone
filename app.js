@@ -14,16 +14,25 @@
   const ink = (bg, pref) => (Math.abs(lum(pref) - lum(bg)) > 0.4 ? pref : lum(bg) > 0.55 ? "#111111" : "#ffffff");
   const KIT_NAMES = ["1ª equipación", "2ª equipación", "3ª equipación"];
 
-  // 2ª y 3ª equipación generadas a partir de los colores del club
+  // 2ª y 3ª equipación: las reales si están en config.js, si no se generan con los colores del club
+  const far = (a, b) => Math.abs(lum(a) - lum(b)) > 0.25 || a.toLowerCase() !== b.toLowerCase() && Math.abs(lum(a) - lum(b)) > 0.12 && hueGap(a, b);
+  const hueGap = (a, b) => {
+    const h = (hex) => { const n = parseInt(hex.slice(1), 16); const r = n >> 16, g = (n >> 8) & 255, bl = n & 255; const mx = Math.max(r, g, bl), mn = Math.min(r, g, bl);
+      if (mx === mn) return -1; let x = mx === r ? (g - bl) / (mx - mn) : mx === g ? 2 + (bl - r) / (mx - mn) : 4 + (r - g) / (mx - mn); return ((x * 60) + 360) % 360; };
+    const ha = h(a), hb = h(b); if (ha < 0 || hb < 0) return false; const d = Math.abs(ha - hb); return Math.min(d, 360 - d) > 40;
+  };
   function autoKits(t) {
+    const real = t.equipaciones || [];
     const all = [...t.colors, t.trim];
     const dark = all.find((c) => lum(c) < 0.45) || "#1b2a4a";
     const light = lum(t.colors[0]) > 0.6;
     const away = light
       ? { pattern: "solid", colors: [dark], sleeves: null, trim: t.colors[0], text: ink(dark, t.colors[0]) }
       : { pattern: "solid", colors: ["#ffffff"], sleeves: null, trim: t.colors[0], text: ink("#ffffff", t.colors[0]) };
-    const thirdBody = [t.trim, ...t.colors].find((c) => Math.abs(lum(c) - lum(t.colors[0])) > 0.25 && Math.abs(lum(c) - lum(away.colors[0])) > 0.25) || "#1d1f24";
-    const thirdTrim = Math.abs(lum(t.colors[0]) - lum(thirdBody)) > 0.3 ? t.colors[0] : ink(thirdBody, "#ffffff");
+    const awayBody = ((real[1] && real[1].colors) || away.colors)[0];
+    const candidates = [t.trim, ...t.colors, "#ffffff", "#1d1f24", "#c9c6c0", "#1f3d6b", "#7a1f2b"];
+    const thirdBody = candidates.find((c) => far(c, t.colors[0]) && far(c, awayBody)) || "#c9c6c0";
+    const thirdTrim = far(t.colors[0], thirdBody) ? t.colors[0] : ink(thirdBody, "#ffffff");
     const third = { pattern: "solid", colors: [thirdBody], sleeves: null, trim: thirdTrim, text: ink(thirdBody, thirdTrim) };
     return [{}, away, third];
   }
@@ -63,7 +72,7 @@
     return `<polygon points="${pts.join(" ")}" fill="${color}"/>`;
   }
 
-  function bodyPattern(t) {
+  function bodyPattern(t, id) {
     const [c1, c2, c3] = t.colors;
     if (t.pattern === "stripes") {
       const w = 17;
@@ -83,6 +92,15 @@
     }
     if (t.pattern === "sash") {
       return `<rect width="200" height="220" fill="${c1}"/><path d="M40 0 L80 0 L180 180 L180 230 L150 230 Z" fill="${c2}"/>`;
+    }
+    if (t.pattern === "pinstripes") {
+      let out = `<rect width="200" height="220" fill="${c1}"/>`;
+      for (let x = 6; x < 200; x += 12) out += `<rect x="${x}" y="0" width="2.2" height="220" fill="${c2}"/>`;
+      return out;
+    }
+    if (t.pattern === "fade") {
+      return `<linearGradient id="${id}f" x1="0" y1="0" x2="0" y2="1"><stop offset=".25" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient>
+        <rect width="200" height="220" fill="url(#${id}f)"/>`;
     }
     if (t.pattern === "checks") {
       let out = `<rect width="200" height="220" fill="${c1}"/>`;
@@ -148,7 +166,7 @@
         </linearGradient>
       </defs>
       <g clip-path="url(#${id}c)">
-        ${bodyPattern(t)}
+        ${bodyPattern(t, id)}
         ${sleeves}
         <path d="${CUFF_L}" fill="${t.trim}"/><path d="${CUFF_R}" fill="${t.trim}"/>
         <path d="M48 76 L50 16 M152 76 L150 16" stroke="rgba(0,0,0,.15)" stroke-width="1.2" fill="none"/>
