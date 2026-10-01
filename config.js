@@ -44,8 +44,13 @@ const COMPS = {
 //  trim:    cuello y puños · text: color del nombre/dorsal
 //  stars:   estrellas sobre el escudo
 //
-//  FOTOS: sube una foto a la carpeta img/ con el nombre del id
-//  (ej. img/real-madrid.jpg) y se mostrará en lugar del dibujo.
+//  EQUIPACIONES: cada equipo tiene 1ª, 2ª y 3ª. La 2ª y la 3ª se dibujan
+//  automáticamente con los colores del club. Para cambiar alguna, añade
+//  equipaciones: [ {}, { colors: ["#ffffff"], trim: "#c60b1e" }, {...} ]
+//  (cada posición es 1ª, 2ª, 3ª; solo pones lo que cambia, y "nombre" opcional).
+//
+//  FOTOS: sube una foto a la carpeta img/ con el nombre del id:
+//  img/real-madrid.jpg (1ª), img/real-madrid-2.jpg (2ª), img/real-madrid-3.jpg (3ª)
 // ============================================================
 const TEAMS = [
   // ---------- LaLiga EA Sports ----------
@@ -180,8 +185,11 @@ const TEAMS = [
   { id: "sabah", name: "Sabah FK", comps: ["champions"], pattern: "solid", colors: ["#ffffff"], trim: "#e05a1b", text: "#e05a1b" },
 
   // ---------- Selecciones (las 48 del Mundial 2026) ----------
-  { id: "espana-roja", name: "España", comps: ["selecciones"], kit: "1ª equipación · Roja", pattern: "solid", colors: ["#c60b1e"], trim: "#ffc400", text: "#ffc400", stars: 2, starColor: "#ffc400", parches: ["campeones", "mundial"] },
-  { id: "espana-blanca", name: "España", comps: ["selecciones"], kit: "2ª equipación · Blanca", pattern: "solid", colors: ["#ffffff"], trim: "#c60b1e", text: "#c60b1e", stars: 2, starColor: "#d4a017", parches: ["campeones", "mundial"] },
+  { id: "espana", name: "España", comps: ["selecciones"], pattern: "solid", colors: ["#c60b1e"], trim: "#ffc400", text: "#ffc400", stars: 2, starColor: "#ffc400", parches: ["campeones", "mundial"],
+    equipaciones: [
+      { nombre: "Roja" },
+      { nombre: "Blanca", colors: ["#ffffff"], trim: "#c60b1e", text: "#c60b1e", starColor: "#d4a017" },
+    ] },
   { id: "alemania", name: "Alemania", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#111111", text: "#111111", stars: 4, starColor: "#d4a017" },
   { id: "arabia-saudi", name: "Arabia Saudí", comps: ["selecciones"], pattern: "solid", colors: ["#006c35"], trim: "#ffffff", text: "#ffffff" },
   { id: "argelia", name: "Argelia", comps: ["selecciones"], pattern: "solid", colors: ["#ffffff"], trim: "#006233", text: "#006233" },

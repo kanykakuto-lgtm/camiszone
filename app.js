@@ -6,8 +6,39 @@
   const P = CONFIG.precios;
 
   // Completa los datos que se pueden deducir de las competiciones
+  const lum = (hex) => {
+    const n = parseInt(hex.slice(1), 16);
+    const [r, g, b] = [n >> 16, (n >> 8) & 255, n & 255].map((v) => v / 255);
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+  const ink = (bg, pref) => (Math.abs(lum(pref) - lum(bg)) > 0.4 ? pref : lum(bg) > 0.55 ? "#111111" : "#ffffff");
+  const KIT_NAMES = ["1ª equipación", "2ª equipación", "3ª equipación"];
+
+  // 2ª y 3ª equipación generadas a partir de los colores del club
+  function autoKits(t) {
+    const all = [...t.colors, t.trim];
+    const dark = all.find((c) => lum(c) < 0.45) || "#1b2a4a";
+    const light = lum(t.colors[0]) > 0.6;
+    const away = light
+      ? { pattern: "solid", colors: [dark], sleeves: null, trim: t.colors[0], text: ink(dark, t.colors[0]) }
+      : { pattern: "solid", colors: ["#ffffff"], sleeves: null, trim: t.colors[0], text: ink("#ffffff", t.colors[0]) };
+    const thirdBody = [t.trim, ...t.colors].find((c) => Math.abs(lum(c) - lum(t.colors[0])) > 0.25 && Math.abs(lum(c) - lum(away.colors[0])) > 0.25) || "#1d1f24";
+    const thirdTrim = Math.abs(lum(t.colors[0]) - lum(thirdBody)) > 0.3 ? t.colors[0] : ink(thirdBody, "#ffffff");
+    const third = { pattern: "solid", colors: [thirdBody], sleeves: null, trim: thirdTrim, text: ink(thirdBody, thirdTrim) };
+    return [{}, away, third];
+  }
+
   TEAMS.forEach((t) => {
-    t.kit = t.kit || "1ª equipación";
+    const auto = autoKits(t);
+    t.kits = KIT_NAMES.map((name, k) => {
+      const o = (t.equipaciones || [])[k] || {};
+      const kit = { ...t, ...auto[k], ...o };
+      kit.kit = o.nombre ? `${name} · ${o.nombre}` : name;
+      kit.photoId = k ? `${t.id}-${k + 1}` : t.id;
+      if (kit.stars && !o.starColor && k) kit.starColor = kit.trim;
+      return kit;
+    });
+    t.kit = t.kits[0].kit;
     t.cat = t.comps.map((c) => COMPS[c]).join(" · ");
     t.parches = t.parches || [...new Set(t.comps.map((c) => PARCHE_DE_COMPETICION[c]).filter(Boolean))];
   });
@@ -155,9 +186,10 @@
   const noPhoto = new Set();
   function shirtVisual(t, opts) {
     const svg = shirtSVG(t, opts);
-    if (noPhoto.has(t.id) || (opts && opts.side === "back")) return svg;
-    return `<span class="shirt-visual">${svg}<img src="img/${esc(t.id)}.jpg" alt="Camiseta ${esc(t.name)} ${esc(t.kit)}" loading="lazy"
-      onload="this.parentNode.classList.add('has-photo')" onerror="window.__noPhoto('${esc(t.id)}');this.remove()"></span>`;
+    const pid = t.photoId || t.id;
+    if (noPhoto.has(pid) || (opts && opts.side === "back")) return svg;
+    return `<span class="shirt-visual">${svg}<img src="img/${esc(pid)}.jpg" alt="Camiseta ${esc(t.name)} ${esc(t.kit)}" loading="lazy"
+      onload="this.parentNode.classList.add('has-photo')" onerror="window.__noPhoto('${esc(pid)}');this.remove()"></span>`;
   }
   window.__noPhoto = (id) => noPhoto.add(id);
 
@@ -183,11 +215,11 @@
     $("#grid").innerHTML = list.length
       ? list.map((t) => `
         <article class="card">
-          <div class="card-img">${shirtVisual(t)}${t.stars ? `<span class="badge">${"★".repeat(t.stars)}</span>` : ""}</div>
+          <div class="card-img">${shirtVisual(t.kits[0])}${t.stars ? `<span class="badge">${"★".repeat(t.stars)}</span>` : ""}</div>
           <div class="card-body">
             <p class="eyebrow">${esc(t.cat)} · 26/27</p>
             <h3>${esc(t.name)}</h3>
-            <p class="muted">${esc(t.kit)}</p>
+            <p class="muted kit-dots">${t.kits.map((k) => `<i style="background:${k.colors[0]};border-color:${k.trim}"></i>`).join("")} 1ª, 2ª y 3ª equipación</p>
             <div class="card-foot">
               <span class="price">desde <b>${eur(P.fan)}</b></span>
               <button class="btn btn-primary btn-sm" data-open="${t.id}">Personalizar</button>
@@ -234,10 +266,14 @@
 
   function openProduct(id) {
     const t = TEAMS.find((x) => x.id === id);
-    sel = { team: t, version: "fan", fit: "Hombre", size: "M", player: "", number: "", patches: [], qty: 1, side: "front" };
+    sel = { team: t, version: "fan", fit: "Hombre", size: "M", player: "", number: "", patches: [], qty: 1, side: "front", kit: 0 };
     $("#mCat").textContent = `${t.cat} · Temporada 26/27`;
     $("#mName").textContent = t.name;
-    $("#mKit").textContent = t.kit;
+    $("#mKits").innerHTML = t.kits.map((k, i) => `
+      <label class="kit-opt">
+        <input type="radio" name="kit" value="${i}" ${i === 0 ? "checked" : ""}>
+        <span class="kit-card">${shirtSVG(k)}<small>${esc(k.kit.replace(" equipación", ""))}</small></span>
+      </label>`).join("");
     chips($("#mVersion"), [
       { value: "fan", label: `Aficionado · ${eur(P.fan)}` },
       { value: "jugador", label: `Jugador · ${eur(P.jugador)}` },
@@ -270,12 +306,14 @@
   }
 
   function updateModal() {
-    $("#previewShirt").innerHTML = shirtVisual(sel.team, { side: sel.side, player: sel.player, number: sel.number });
+    $("#mKit").textContent = sel.team.kits[sel.kit].kit;
+    $("#previewShirt").innerHTML = shirtVisual(sel.team.kits[sel.kit], { side: sel.side, player: sel.player, number: sel.number });
     $("#mQty").textContent = sel.qty;
     $("#mPrice").textContent = eur(unitPrice(sel) * sel.qty);
   }
 
   $("#productForm").addEventListener("change", (e) => {
+    if (e.target.name === "kit") { sel.kit = Number(e.target.value); setSide("front"); }
     if (e.target.name === "version") sel.version = e.target.value;
     if (e.target.name === "fit") { sel.fit = e.target.value; renderSizes(); }
     if (e.target.name === "size") sel.size = e.target.value;
@@ -307,7 +345,7 @@
   $("#productForm").addEventListener("submit", (e) => {
     if (e.submitter && e.submitter.value === "add") {
       cart.push({
-        id: sel.team.id, version: sel.version, fit: sel.fit, size: sel.size,
+        id: sel.team.id, kit: sel.kit, version: sel.version, fit: sel.fit, size: sel.size,
         player: sel.player, number: sel.number, patches: sel.patches, qty: sel.qty,
       });
       saveCart();
@@ -322,7 +360,7 @@
   // ---------------------------------------------------------
   const isKidSize = (size) => /años/.test(size);
   let cart = [];
-  try { cart = JSON.parse(localStorage.getItem("camiszone-cart") || "[]").filter((i) => TEAMS.some((t) => t.id === i.id)).map((i) => ({ fit: isKidSize(i.size) ? "Niño" : "Hombre", ...i, patches: (i.patches || []).filter((id) => PARCHES[id]) })); } catch { cart = []; }
+  try { cart = JSON.parse(localStorage.getItem("camiszone-cart") || "[]").filter((i) => TEAMS.some((t) => t.id === i.id)).map((i) => ({ fit: isKidSize(i.size) ? "Niño" : "Hombre", ...i, kit: Number(i.kit) || 0, patches: (i.patches || []).filter((id) => PARCHES[id]) })); } catch { cart = []; }
   function saveCart() { try { localStorage.setItem("camiszone-cart", JSON.stringify(cart)); } catch {} }
 
   const teamOf = (i) => TEAMS.find((t) => t.id === i.id);
@@ -343,9 +381,9 @@
       ? cart.map((i, idx) => {
         const t = teamOf(i);
         return `<div class="line">
-          <div class="line-img">${shirtVisual(t)}</div>
+          <div class="line-img">${shirtVisual(t.kits[i.kit])}</div>
           <div class="line-info">
-            <b>${esc(t.name)}</b> <span class="muted">${esc(t.kit)}</span>
+            <b>${esc(t.name)}</b> <span class="muted">${esc(t.kits[i.kit].kit)}</span>
             <small>${describe(i).map(esc).join(" · ")}</small>
             <small>${i.qty} × ${eur(unitPrice(i))}</small>
           </div>
@@ -396,7 +434,7 @@
         const t = teamOf(i);
         return {
           equipo: t.name,
-          equipacion: `${t.kit} 26/27`,
+          equipacion: `${t.kits[i.kit].kit} 26/27`,
           version: i.version === "jugador" ? "Jugador" : "Aficionado",
           corte: i.fit,
           talla: i.size,
@@ -514,8 +552,8 @@
     }
   });
 
-  $("#heroShirts").innerHTML = ["barcelona", "real-madrid", "espana-roja"]
-    .map((id) => `<div class="hero-shirt">${shirtVisual(TEAMS.find((t) => t.id === id))}</div>`).join("");
+  $("#heroShirts").innerHTML = ["barcelona", "real-madrid", "espana"]
+    .map((id) => `<div class="hero-shirt">${shirtVisual(TEAMS.find((t) => t.id === id).kits[0])}</div>`).join("");
   $("#year").textContent = new Date().getFullYear();
 
   renderTabs();
