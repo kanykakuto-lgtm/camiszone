@@ -43,7 +43,7 @@ Todo se edita en `config.js`:
 
 - `pedidosUrl`: la dirección de tu Apps Script (ver arriba).
 - `precios`: aficionado 20 €, jugador 25 €; nombre, dorsal y parche incluidos (0 €).
-- `cortes`: tallas disponibles para hombre, mujer, niño y niña.
+- `cortes`: tallas disponibles — hombre S a 4XL, mujer XS a 4XL, niño y niña de 1-2 a 13-14 años.
 - `TEAMS`: lista de equipos. Puedes añadir, quitar o cambiar colores.
 
 ### Poner fotos reales

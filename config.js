@@ -16,10 +16,10 @@ const CONFIG = {
 
   // Corte de la camiseta y las tallas disponibles para cada uno
   cortes: {
-    "Hombre": ["S", "M", "L", "XL", "XXL"],
-    "Mujer": ["XS", "S", "M", "L", "XL"],
-    "Niño": ["4 años", "6 años", "8 años", "10 años", "12 años", "14 años"],
-    "Niña": ["4 años", "6 años", "8 años", "10 años", "12 años", "14 años"],
+    "Hombre": ["S", "M", "L", "XL", "XXL", "3XL", "4XL"],
+    "Mujer": ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"],
+    "Niño": ["1-2 años", "3-4 años", "5-6 años", "7-8 años", "9-10 años", "11-12 años", "13-14 años"],
+    "Niña": ["1-2 años", "3-4 años", "5-6 años", "7-8 años", "9-10 años", "11-12 años", "13-14 años"],
   },
 };
 
