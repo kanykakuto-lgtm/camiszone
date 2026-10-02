@@ -4,7 +4,7 @@
 const CONFIG = {
   // Dirección de tu Google Apps Script (ver README → "Recibir los pedidos").
   // Cada pedido se guarda en tu hoja de Google Sheets y te llega un email.
-  pedidosUrl: "",
+  pedidosUrl: "https://script.google.com/macros/s/AKfycbxv7NmK3TJabbf3Fbq5M8nWlKUPXJjBJdU5gWb-GYIdFtai4MIAFLGtvwJ3lKiBWBEw/exec",
 
   precios: {
     fan: 20,            // Versión aficionado
