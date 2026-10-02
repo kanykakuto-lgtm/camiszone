@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Colección CamisZone 26/27</title>
+  <meta name="description" content="Colección propia de camisetas de fútbol CamisZone: diseño original, personalizable con nombre y dorsal.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #0d1117; --bg-2: #161b22; --card: #1c222b; --line: #2b333f; --text: #f2f4f7; --muted: #9aa4b2; --accent: #22c55e; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 Inter, system-ui, sans-serif; }
+    h1, h2, h3 { font-family: Oswald, Impact, sans-serif; text-transform: uppercase; letter-spacing: .5px; margin: 0; line-height: 1.1; }
+    a { color: inherit; }
+    .top { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--line); }
+    .logo { font-family: Oswald, sans-serif; font-size: 24px; font-weight: 700; text-decoration: none; text-transform: uppercase; }
+    .logo span { color: var(--accent); }
+    .top a.back { color: var(--muted); font-size: 14px; }
+    .intro { max-width: 1100px; margin: 0 auto; padding: 40px 20px 10px; }
+    .eyebrow { color: var(--accent); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 0 0 6px; }
+    .intro h1 { font-size: clamp(34px, 5vw, 56px); margin-bottom: 10px; }
+    .intro p { color: var(--muted); max-width: 60ch; margin: 0; }
+    .grid { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+    .stage { position: relative; aspect-ratio: 1 / 1.05; background: radial-gradient(circle at 50% 38%, #2f3846, #171c23 72%); display: grid; place-items: center; padding: 18px 18px 6px; }
+    .stage svg.front { width: 92%; filter: drop-shadow(0 16px 22px rgba(0,0,0,.5)); transition: transform .3s; }
+    .card:hover .stage svg.front { transform: translateY(-4px) rotate(-1.5deg); }
+    .stage svg.backmini { position: absolute; right: 10px; bottom: 10px; width: 30%; filter: drop-shadow(0 8px 10px rgba(0,0,0,.5)); }
+    .info { padding: 14px 16px 16px; }
+    .info h3 { font-size: 22px; }
+    .info p { color: var(--muted); font-size: 14px; margin: 4px 0 10px; min-height: 42px; }
+    .swatches { display: flex; gap: 6px; }
+    .swatches i { width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255,255,255,.18); }
+    .note { max-width: 1100px; margin: 0 auto 50px; padding: 0 20px; color: var(--muted); font-size: 14px; }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <a class="logo" href="./">Camis<span>Zone</span></a>
+    <a class="back" href="./">← Volver a la tienda</a>
+  </header>
+
+  <section class="intro">
+    <p class="eyebrow">Colección propia · 26/27</p>
+    <h1>Diseñadas por CamisZone</h1>
+    <p>Camisetas de fútbol con diseño original y nuestro propio escudo. Tejido técnico, acabados cuidados y personalización con tu nombre y dorsal.</p>
+  </section>
+
+  <main class="grid" id="grid"></main>
+  <p class="note">Imágenes de diseño. El resultado final depende del tejido y del taller de estampación.</p>
+
+  <script>
+  const DESIGNS = [
+    { name: "Noche", text: "Azul medianoche con raya diplomática tono sobre tono y cuello de pico dorado.",
+      base: "#141c33", alt: "#1c2645", trim: "#c9a54c", ink: "#c9a54c", collar: "v", pattern: "pinstripe" },
+    { name: "Marfil", text: "Blanco roto con cuello polo granate y doble ribete en las mangas. Clásica y elegante.",
+      base: "#f1ece1", alt: "#e4ddcd", trim: "#6e1f2c", ink: "#6e1f2c", collar: "polo", pattern: "piping" },
+    { name: "Brasa", text: "Rojo intenso que se funde en negro, con detalles en blanco roto.",
+      base: "#b3121f", alt: "#140a0c", trim: "#efe7da", ink: "#efe7da", collar: "crew", pattern: "fade" },
+    { name: "Bosque", text: "Verde inglés con franja fina crema en el pecho y cuello polo a juego.",
+      base: "#163a2a", alt: "#1d4a36", trim: "#ece2c8", ink: "#ece2c8", collar: "polo", pattern: "chestline" },
+    { name: "Cielo", text: "Celeste con ondas tono sobre tono y cuello redondo azul marino.",
+      base: "#8cc4e8", alt: "#a7d3ef", trim: "#14284b", ink: "#14284b", collar: "crew", pattern: "waves" },
+    { name: "Carbón", text: "Gris antracita con trama geométrica y acentos lima. La más moderna.",
+      base: "#25282e", alt: "#2e3239", trim: "#c6f135", ink: "#c6f135", collar: "v", pattern: "geo" },
+    { name: "Arena", text: "Beige arena con banda terracota en el pecho, aire retro de los 70.",
+      base: "#ddcdb0", alt: "#cfbd9c", trim: "#b4532a", ink: "#7a3418", collar: "polo", pattern: "band" },
+    { name: "Aurora", text: "Degradado de azul profundo a violeta, con ribetes plateados.",
+      base: "#1d2b6b", alt: "#5b2a86", trim: "#d7dbe3", ink: "#ffffff", collar: "v", pattern: "fadeV" },
+    { name: "Clásica Blanca", text: "Blanca pura con mangas en contraste negro y escudo bordado.",
+      base: "#fafafa", alt: "#eeeeee", trim: "#111111", ink: "#111111", collar: "crew", pattern: "sleeves" },
+  ];
+
+  const BODY = "M105 22 C120 34 180 34 195 22 L232 32 C250 38 270 52 286 72 L262 120 L232 104 L232 300 C232 310 226 314 216 314 L84 314 C74 314 68 310 68 300 L68 104 L38 120 L14 72 C30 52 50 38 68 32 Z";
+  const SL = "M68 32 C50 38 30 52 14 72 L38 120 L68 104 Z";
+  const SR = "M232 32 C250 38 270 52 286 72 L262 120 L232 104 Z";
+  const CUFF_L = "M14 72 L38 120 L45 116 L21 68 Z";
+  const CUFF_R = "M286 72 L262 120 L255 116 L279 68 Z";
+  let n = 0;
+
+  function pattern(d, id) {
+    const { base, alt, trim } = d;
+    switch (d.pattern) {
+      case "pinstripe": {
+        let s = `<rect width="300" height="330" fill="${base}"/>`;
+        for (let x = 4; x < 300; x += 11) s += `<rect x="${x}" width="1.6" height="330" fill="${alt}"/>`;
+        return s;
+      }
+      case "piping":
+        return `<rect width="300" height="330" fill="${base}"/>
+          <path d="M28 82 L52 124 M33 78 L57 120" stroke="${trim}" stroke-width="2.4"/>
+          <path d="M272 82 L248 124 M267 78 L243 120" stroke="${trim}" stroke-width="2.4"/>`;
+      case "fade":
+        return `<linearGradient id="${id}g1" x1="0" y1="0" x2="0" y2="1"><stop offset=".15" stop-color="${base}"/><stop offset="1" stop-color="${alt}"/></linearGradient>
+          <rect width="300" height="330" fill="url(#${id}g1)"/>`;
+      case "fadeV":
+        return `<linearGradient id="${id}g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${base}"/><stop offset="1" stop-color="${alt}"/></linearGradient>
+          <rect width="300" height="330" fill="url(#${id}g2)"/>
+          <path d="M68 104 L68 300 M232 104 L232 300" stroke="${trim}" stroke-width="1.6" opacity=".8"/>`;
+      case "chestline":
+        return `<rect width="300" height="330" fill="${base}"/><rect y="132" width="300" height="5" fill="${trim}"/><rect y="141" width="300" height="1.5" fill="${trim}"/>`;
+      case "waves": {
+        let s = `<rect width="300" height="330" fill="${base}"/>`;
+        for (let y = 40; y < 330; y += 22) s += `<path d="M0 ${y} q25 -10 50 0 t50 0 t50 0 t50 0 t50 0 t50 0" fill="none" stroke="${alt}" stroke-width="5"/>`;
+        return s;
+      }
+      case "geo": {
+        let s = `<rect width="300" height="330" fill="${base}"/>`;
+        for (let y = 0; y < 330; y += 24) for (let x = (y / 24) % 2 ? 12 : 0; x < 300; x += 24)
+          s += `<path d="M${x} ${y + 12} l12 -12 l12 12 l-12 12 Z" fill="${alt}"/>`;
+        return s;
+      }
+      case "band":
+        return `<rect width="300" height="330" fill="${base}"/><rect y="118" width="300" height="34" fill="${trim}"/><rect y="155" width="300" height="3" fill="${trim}"/>`;
+      case "sleeves":
+        return `<rect width="300" height="330" fill="${base}"/><path d="${SL}" fill="${trim}"/><path d="${SR}" fill="${trim}"/>`;
+      default:
+        return `<rect width="300" height="330" fill="${base}"/>`;
+    }
+  }
+
+  function collar(d, back) {
+    const t = d.trim;
+    if (back) return `<path d="M105 22 C120 30 180 30 195 22 C182 36 118 36 105 22 Z" fill="${t}"/>`;
+    if (d.collar === "v")
+      return `<path d="M114 22 L150 58 L186 22 C172 28 128 28 114 22 Z" fill="rgba(0,0,0,.45)"/>
+        <path d="M105 22 L150 66 L195 22 L186 20 L150 56 L114 20 Z" fill="${t}"/>`;
+    if (d.collar === "polo")
+      return `<path d="M120 26 L150 44 L180 26 C168 30 132 30 120 26 Z" fill="rgba(0,0,0,.4)"/>
+        <rect x="143" y="40" width="14" height="44" rx="2" fill="${t}"/>
+        <circle cx="150" cy="54" r="2.2" fill="${d.base}"/><circle cx="150" cy="70" r="2.2" fill="${d.base}"/>
+        <path d="M105 22 L152 42 L132 58 L97 30 Z" fill="${t}"/><path d="M195 22 L148 42 L168 58 L203 30 Z" fill="${t}"/>`;
+    return `<path d="M108 22 C122 32 178 32 192 22 C180 38 120 38 108 22 Z" fill="rgba(0,0,0,.4)"/>
+      <path d="M103 21 C120 34 180 34 197 21 C194 30 190 33 186 34 C172 44 128 44 114 34 C110 33 106 30 103 21 Z" fill="${t}"/>`;
+  }
+
+  function crest(d) {
+    return `<g transform="translate(176 76)">
+      <path d="M0 0 H30 V16 C30 30 15 38 15 38 C15 38 0 30 0 16 Z" fill="${d.trim}" stroke="rgba(0,0,0,.25)" stroke-width="1"/>
+      <path d="M3 3 H27 V16 C27 27 15 34 15 34 C15 34 3 27 3 16 Z" fill="none" stroke="${d.base}" stroke-width="1"/>
+      <text x="15" y="22" text-anchor="middle" font-family="Oswald, Impact, sans-serif" font-weight="700" font-size="12" fill="${d.base}">CZ</text>
+    </g>
+    <g transform="translate(94 84)" fill="${d.trim}">
+      <path d="M0 6 L6 0 L12 6 L6 12 Z"/><text x="18" y="10" font-family="Oswald, sans-serif" font-size="8.5" letter-spacing="1.2">CAMISZONE</text>
+    </g>`;
+  }
+
+  function shirt(d, opts = {}) {
+    const id = "d" + (++n);
+    const back = opts.back;
+    const extras = back
+      ? `<text x="150" y="58" text-anchor="middle" font-family="Oswald, sans-serif" font-size="8" letter-spacing="2" fill="${d.trim}">CAMISZONE</text>
+         <g fill="${d.ink}" font-family="Oswald, Impact, sans-serif" font-weight="700" text-anchor="middle">
+           <text x="150" y="104" font-size="22" letter-spacing="3">${opts.player || "TU NOMBRE"}</text>
+           <text x="150" y="214" font-size="96">${opts.number || "10"}</text>
+         </g>`
+      : crest(d);
+    return `<svg class="${opts.cls || ""}" viewBox="0 0 300 330" role="img" aria-label="Camiseta ${d.name} ${back ? "espalda" : "frontal"}">
+      <defs>
+        <clipPath id="${id}c"><path d="${BODY}"/></clipPath>
+        <linearGradient id="${id}s" x1="0" x2="1">
+          <stop offset="0" stop-color="#000" stop-opacity=".28"/><stop offset=".18" stop-color="#fff" stop-opacity=".07"/>
+          <stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset=".82" stop-color="#000" stop-opacity=".06"/>
+          <stop offset="1" stop-color="#000" stop-opacity=".3"/>
+        </linearGradient>
+        <linearGradient id="${id}v" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".06"/><stop offset="1" stop-color="#000" stop-opacity=".18"/></linearGradient>
+      </defs>
+      <g clip-path="url(#${id}c)">
+        ${pattern(d, id)}
+        <path d="${CUFF_L}" fill="${d.trim}"/><path d="${CUFF_R}" fill="${d.trim}"/>
+        <path d="M68 104 C70 70 69 48 68 32 M232 104 C230 70 231 48 232 32" stroke="rgba(0,0,0,.22)" stroke-width="1.4" fill="none"/>
+        <path d="M100 150 C110 200 104 250 112 300 M205 170 C196 220 204 260 196 305" stroke="rgba(0,0,0,.07)" stroke-width="10" fill="none"/>
+        <rect width="300" height="330" fill="url(#${id}s)"/><rect width="300" height="330" fill="url(#${id}v)"/>
+        <rect y="306" width="300" height="10" fill="rgba(0,0,0,.12)"/>
+      </g>
+      ${collar(d, back)}
+      ${extras}
+      <path d="${BODY}" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="1.4" stroke-linejoin="round"/>
+    </svg>`;
+  }
+
+  document.getElementById("grid").innerHTML = DESIGNS.map((d) => `
+    <article class="card">
+      <div class="stage">${shirt(d, { cls: "front" })}${shirt(d, { cls: "backmini", back: true })}</div>
+      <div class="info">
+        <h3>${d.name}</h3>
+        <p>${d.text}</p>
+        <div class="swatches"><i style="background:${d.base}"></i><i style="background:${d.alt}"></i><i style="background:${d.trim}"></i></div>
+      </div>
+    </article>`).join("");
+  </script>
+</body>
+</html>
